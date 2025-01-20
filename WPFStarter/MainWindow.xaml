@@ -10,14 +10,16 @@
         <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Извлечение данных из файла .csv в БД" VerticalAlignment="Top" Background="#FFA6A6A6"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="Путь" VerticalAlignment="Top"/>
         <TextBox x:Name="PathImport" HorizontalAlignment="Left" Margin="80,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Button Content="Извлечь" HorizontalAlignment="Left" Margin="220,35,0,0" VerticalAlignment="Top"/>
+        <Button Content="Извлечь" HorizontalAlignment="Left" Margin="220,35,0,0" VerticalAlignment="Top" Click="Button_Click"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,60,0,0" TextWrapping="Wrap" Text="Экспорт данных из БД в файл .csv или .XML" VerticalAlignment="Top" Background="#FFA6A6A6"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,85,0,0" TextWrapping="Wrap" Text="Путь" VerticalAlignment="Top"/>
         <TextBox x:Name="PathExport" HorizontalAlignment="Left" Margin="80,85,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Button Content="Экспорт" HorizontalAlignment="Left" Margin="220,85,0,0" VerticalAlignment="Top"/>
+        <Button Content="Экспорт" HorizontalAlignment="Left" Margin="220,85,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,110,0,0" TextWrapping="Wrap" Text="Тип файла" VerticalAlignment="Top"/>
+        <StackPanel x:Name="stackPanel" Orientation="Horizontal">
         <RadioButton Content=".csv" HorizontalAlignment="Left" Margin="80,110,0,0" VerticalAlignment="Top" GroupName="Type" IsChecked="False"/>
-        <RadioButton Content=".XML" HorizontalAlignment="Left" Margin="180,110,0,0" VerticalAlignment="Top" GroupName="Type"/>
+        <RadioButton Content=".XML" HorizontalAlignment="Left" Margin="18,110,0,0" VerticalAlignment="Top" GroupName="Type"/>
+        </StackPanel>
         <TextBlock HorizontalAlignment="Left" Margin="10,135,0,0" TextWrapping="Wrap" Text="Выбор данных для экспорта" VerticalAlignment="Top" Background="#FFA6A6A6"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,160,0,0" TextWrapping="Wrap" Text="По дате" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,185,0,0" TextWrapping="Wrap" Text="за" VerticalAlignment="Top"/>
