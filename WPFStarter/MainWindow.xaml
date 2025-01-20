@@ -9,34 +9,34 @@
     <Grid>
         <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Извлечение данных из файла .csv в БД" VerticalAlignment="Top" Background="#FFA6A6A6"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="Путь" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="80,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="TextBox"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="220,35,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Margin="80,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Извлечь" HorizontalAlignment="Left" Margin="220,35,0,0" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,60,0,0" TextWrapping="Wrap" Text="Экспорт данных из БД в файл .csv или .XML" VerticalAlignment="Top" Background="#FFA6A6A6"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,85,0,0" TextWrapping="Wrap" Text="Путь" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="80,85,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="220,85,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Margin="80,85,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Экспорт" HorizontalAlignment="Left" Margin="220,85,0,0" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,110,0,0" TextWrapping="Wrap" Text="Тип файла" VerticalAlignment="Top"/>
-        <RadioButton Content="RadioButton" HorizontalAlignment="Left" Margin="80,110,0,0" VerticalAlignment="Top"/>
-        <RadioButton Content="RadioButton" HorizontalAlignment="Left" Margin="180,110,0,0" VerticalAlignment="Top"/>
+        <RadioButton Content=".csv" HorizontalAlignment="Left" Margin="80,110,0,0" VerticalAlignment="Top" GroupName="Type" IsChecked="False"/>
+        <RadioButton Content=".XML" HorizontalAlignment="Left" Margin="180,110,0,0" VerticalAlignment="Top" GroupName="Type"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,135,0,0" TextWrapping="Wrap" Text="Выбор данных для экспорта" VerticalAlignment="Top" Background="#FFA6A6A6"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,160,0,0" TextWrapping="Wrap" Text="По дате" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,185,0,0" TextWrapping="Wrap" Text="за" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="80,185,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="80,185,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,210,0,0" TextWrapping="Wrap" Text="с" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="80,210,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="80,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBlock HorizontalAlignment="Left" Margin="215,210,0,0" TextWrapping="Wrap" Text="по" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="280,210,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="280,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,235,0,0" TextWrapping="Wrap" Text="По городу" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="10,260,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="10,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,285,0,0" TextWrapping="Wrap" Text="По стране" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="10,310,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="10,310,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBlock HorizontalAlignment="Left" Margin="155,235,0,0" TextWrapping="Wrap" Text="По ФИО" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="155,260,0,0" TextWrapping="Wrap" Text="Фамилия" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="155,285,0,0" TextWrapping="Wrap" Text="Имя" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="155,310,0,0" TextWrapping="Wrap" Text="Отчество" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="220,260,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Margin="220,285,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Margin="220,310,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="220,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="220,285,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="220,310,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
 
     </Grid>
 </Window>
