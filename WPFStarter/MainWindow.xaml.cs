@@ -37,15 +37,7 @@ namespace WPFStarter
         /// </summary>
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Экспорт данных");
-            string? text1 = Date.Text;
-            if (text1 != "") {
-                MessageBox.Show(text1);
-            }
-            else
-            {
-                MessageBox.Show("Date пустой");
-            }
+            FileType();
         }
         /// <summary>
         /// E.A.T. 22-January-2025
@@ -61,6 +53,21 @@ namespace WPFStarter
             else
             {
                 MessageBox.Show("Файл не найден.");
+            }
+        }
+        /// <summary>
+        /// E.A.T. 22-January-2025
+        /// Checking the file type selection.
+        /// </summary>
+        private void FileType() { 
+        if (radioButton1.IsChecked == true)
+            {
+                string selectedFileType = radioButton1.Content.ToString();
+                MessageBox.Show($"Тип файла: {selectedFileType}");
+            }
+            else if (radioButton2.IsChecked == true) {
+                string selectedFileType = radioButton2.Content.ToString();
+                MessageBox.Show($"Тип файла: {selectedFileType}");
             }
         }
     }
