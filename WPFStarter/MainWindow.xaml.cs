@@ -10,11 +10,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
 
+/// <summary>
+/// E.A.T. 20-January-2025
+/// Interaction logic for MainWindow.xaml
+/// </summary>
 namespace WPFStarter
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -38,6 +39,7 @@ namespace WPFStarter
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             FileType();
+            
         }
         /// <summary>
         /// E.A.T. 22-January-2025
@@ -49,6 +51,7 @@ namespace WPFStarter
             if (File.Exists(filePath))
             {
                 MessageBox.Show("Файл существует.");
+                Program.ImportCsv(filePath);
             }
             else
             {
@@ -60,7 +63,7 @@ namespace WPFStarter
         /// Checking the file type selection.
         /// </summary>
         private void FileType() { 
-        if (radioButton1.IsChecked == true)
+            if (radioButton1.IsChecked == true)
             {
                 string selectedFileType = radioButton1.Content.ToString();
                 MessageBox.Show($"Тип файла: {selectedFileType}");

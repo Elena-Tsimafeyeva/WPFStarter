@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+///<summary>
+/// E.A.T. 25-December-2024
+/// A data entry class for each person.
+///</summary>
 namespace WPFStarter
 {
     internal class Person
