@@ -19,14 +19,18 @@ namespace WPFStarter
     {
         public static void ImportCsv(string filePath)
         {
-            ///<summary>
-            /// E.A.T. 29-January-2025
-            /// Reading data from a .csv file and transferring it to a list of objects.
-            ///</summary>
-
             var records = new List<Person>();
-
-            using (TextFieldParser tfp = new TextFieldParser(filePath))
+            ReadingData(records, filePath);
+            RecordDatabase(records);
+            OutputDataScreen(records);
+        }
+        ///<summary>
+        /// E.A.T. 29-January-2025
+        /// Reading data from a .csv file and transferring it to a list of objects.
+        ///</summary>
+        public static void ReadingData(List<Person> records, string filePath)
+        {
+            using TextFieldParser tfp = new(filePath);
             {
                 tfp.TextFieldType = FieldType.Delimited;
                 tfp.SetDelimiters(";");
@@ -47,27 +51,31 @@ namespace WPFStarter
                     records.Add(record);
                 }
             }
-            ///<summary>
-            /// E.A.T. 30-January-2025
-            /// Writing data to the database.
-            ///</summary>
-            using (var context = new ApplicationContext())
+        }
+        ///<summary>
+        /// E.A.T. 30-January-2025
+        /// Record data to the database.
+        ///</summary>
+        public static void RecordDatabase(List<Person> records)
+        {
+            using var context = new ApplicationContext();
             {
                 context.Table_People_second.AddRange(records);
                 context.SaveChanges();
             }
-            ///<summary>
-            /// E.A.T. 30-January-2025
-            /// Outputting data from a .csv file to the screen.
-            ///</summary>
+        }
+        ///<summary>
+        /// E.A.T. 30-January-2025
+        /// Outputting data from a .csv file to the screen.
+        ///</summary>
+        public static void OutputDataScreen(List<Person> records)
+        {
             foreach (var record in records)
             {
                 MessageBox.Show($"{record.Date}, {record.FirstName}, {record.LastName}, {record.SurName}, {record.City}, {record.Country}");
             }
             MessageBox.Show("Данные записанны!");
-
         }
-    }
 
-    
+    }
 }
