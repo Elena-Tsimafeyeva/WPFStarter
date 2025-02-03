@@ -38,15 +38,18 @@ namespace WPFStarter
         /// </summary>
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            FileType();
-            
+            string? selectedFileType = null;
+            FileType(out selectedFileType);
+            MessageBox.Show($"Проверка в Button_Click_1 {selectedFileType}");
+
+
         }
         /// <summary>
         /// E.A.T. 22-January-2025
         /// Checking for file availability.
         /// </summary>
         /// <param name="filePath"></param>
-        private static void FileAvailability(string filePath)
+        public static void FileAvailability(string filePath)
         {
             if (File.Exists(filePath))
             {
@@ -62,14 +65,15 @@ namespace WPFStarter
         /// E.A.T. 22-January-2025
         /// Checking the file type selection.
         /// </summary>
-        private void FileType() { 
+        public void FileType(out string? selectedFileType) {
+            selectedFileType = null;
             if (radioButton1.IsChecked == true)
             {
-                string selectedFileType = radioButton1.Content.ToString();
+                selectedFileType = radioButton1.Content.ToString();
                 MessageBox.Show($"Тип файла: {selectedFileType}");
             }
             else if (radioButton2.IsChecked == true) {
-                string selectedFileType = radioButton2.Content.ToString();
+                selectedFileType = radioButton2.Content.ToString();
                 MessageBox.Show($"Тип файла: {selectedFileType}");
             }
         }

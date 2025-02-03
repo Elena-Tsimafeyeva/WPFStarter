@@ -1,6 +1,8 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -76,6 +78,53 @@ namespace WPFStarter
             }
             MessageBox.Show("Данные записанны!");
         }
+        ///<summary>
+        /// E.A.T. 3-February-2025
+        /// Outputting data from the DB to the screen.
+        ///</summary>
+        public static void OutputDataScreenId(List<Person> records)
+        {
+            foreach (var record in records)
+            {
+                MessageBox.Show($"{record.Id}, {record.Date}, {record.FirstName}, {record.LastName}, {record.SurName}, {record.City}, {record.Country}");
+            }
+        }
+        //public void ExportData(string fileName) { }
+        //public void CreateFile() { }
+        ///<summary>
+        /// E.A.T. 3-February--2025
+        /// Outputting data from the DB to the list of objects.
+        ///</summary>
+        public static void ReadData(List<Person> records) {
+            string connectionString = "Server=localhost;Database=People;Trusted_Connection=True;TrustServerCertificate=True;";
+            string query = "SELECT Id, Date, FirstName, LastName, SurName, City, Country FROM  Table_People_second";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    Person person = new Person
+                    {
+                        Id = (int)reader["Id"],
+                        Date = (DateTime)reader["Date"],
+                        FirstName = reader["FirstName"].ToString(),
+                        LastName = reader["LastName"].ToString(),
+                        SurName = reader["SurName"].ToString(),
+                        City = reader["City"].ToString(),
+                        Country = reader["Country"].ToString()
 
+                    };
+                    records.Add(person);
+                    
+                }
+                reader.Close();
+                MessageBox.Show("Данные из БД Записанны!");
+                OutputDataScreenId(records);
+            }
+            
+        }
+        //public void SortData() { }
     }
 }
