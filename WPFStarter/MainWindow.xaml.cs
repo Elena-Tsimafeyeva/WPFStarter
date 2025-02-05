@@ -35,12 +35,20 @@ namespace WPFStarter
         /// <summary>
         /// E.A.T. 20-January-2025
         /// Button event handler for export.
+        /// E.A.T. 4-February--2025
+        /// Checking the entered data.
         /// </summary>
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            //Checking the file type.
             string? selectedFileType = null;
             FileType(out selectedFileType);
             MessageBox.Show($"Проверка в Button_Click_1 {selectedFileType}");
+            //Sorting the required data
+            string? date = Date.Text;
+            string? fromDate = FromDate.Text;
+            string? toDate = ToDate.Text;
+            Program.SortData(date, fromDate, toDate);
 
 
         }
