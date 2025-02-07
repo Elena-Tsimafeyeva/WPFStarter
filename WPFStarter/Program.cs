@@ -135,9 +135,31 @@ namespace WPFStarter
         /// E.A.T. 4-February--2025
         /// Validation of entered data for sorting. 
         ///</summary>
-        public static void SortData(string? date, string? fromDate, string? toDate) {
+        public static void SortData(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, string? fileType) {
             CheckingDate(date, fromDate, toDate, out bool outDate, out bool outFromDate, out bool outToDate);
             MessageBox.Show($"SortData {outDate},{outFromDate},{outToDate}");
+            CheckingWord(firstName, out bool outFirstName);
+            CheckingWord(lastName, out bool outLastName);
+            CheckingWord(surName, out bool outSurName);
+            CheckingWord(city, out bool outCity);
+            CheckingWord(country, out bool outCountry);
+            MessageBox.Show($"ФИО {outFirstName}{outLastName}{outSurName} Город {outCity} Страна {outCountry}");
+            if(date != "" && outDate == false|| fromDate != "" && outFromDate == false || toDate != "" && outToDate == false || firstName != "" && outFirstName == false || lastName != "" && outLastName== false || surName != "" && outSurName== false || city!= "" && outCity== false || country!= "" && outCountry== false)
+            {
+                MessageBox.Show("Исправьте данные!");
+            }
+            else
+            {
+                if (MessageBox.Show($"Вы хотите перенести данные?\nВаши данные:\nДата за {date}\nДата с {fromDate} по {toDate}\nГород {city}\nСтрана {country}\nФамилия {firstName}\nИмя {lastName}\nОтчество{surName}\nТип файла: {fileType}","Перенос данных", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    MessageBox.Show("Переносим!");
+                    //Transferring data to a file.
+                }
+                else
+                {
+                    MessageBox.Show("Исправьте данные!");
+                }
+            }
         }
         ///<summary>
         /// E.A.T. 4-February--2025

@@ -29,7 +29,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="215,210,0,0" TextWrapping="Wrap" Text="по" VerticalAlignment="Top"/>
         <TextBox x:Name="ToDate" HorizontalAlignment="Left" Margin="280,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,235,0,0" TextWrapping="Wrap" Text="По городу" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="10,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="City" HorizontalAlignment="Left" Margin="10,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,285,0,0" TextWrapping="Wrap" Text="По стране" VerticalAlignment="Top"/>
         <TextBox x:Name="Country" HorizontalAlignment="Left" Margin="10,310,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <TextBlock HorizontalAlignment="Left" Margin="155,235,0,0" TextWrapping="Wrap" Text="По ФИО" VerticalAlignment="Top"/>

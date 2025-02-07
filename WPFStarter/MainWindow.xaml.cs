@@ -43,16 +43,18 @@ namespace WPFStarter
             //Checking the file type.
             string? selectedFileType = null;
             FileType(out selectedFileType);
-            MessageBox.Show($"Проверка в Button_Click_1 {selectedFileType}");
+            //MessageBox.Show($"Проверка в Button_Click_1 {selectedFileType}");
             //Sorting the required data
             string? date = Date.Text;
             string? fromDate = FromDate.Text;
             string? toDate = ToDate.Text;
-            Program.SortData(date, fromDate, toDate);
 
-            string? name = FirstName.Text;
-            Program.CheckingWord(name, out bool outWord);
-            MessageBox.Show($" outWord {outWord}");
+            string? firstName = FirstName.Text;
+            string? lastName = LastName.Text;
+            string? surName = SurName.Text;
+            string? city = City.Text;
+            string? country = Country.Text;
+            Program.SortData(date, fromDate, toDate, firstName, lastName, surName, city, country, selectedFileType);
 
 
         }
@@ -82,11 +84,11 @@ namespace WPFStarter
             if (radioButton1.IsChecked == true)
             {
                 selectedFileType = radioButton1.Content.ToString();
-                MessageBox.Show($"Тип файла: {selectedFileType}");
+                //MessageBox.Show($"Тип файла: {selectedFileType}");
             }
             else if (radioButton2.IsChecked == true) {
                 selectedFileType = radioButton2.Content.ToString();
-                MessageBox.Show($"Тип файла: {selectedFileType}");
+                //MessageBox.Show($"Тип файла: {selectedFileType}");
             }
         }
     }
