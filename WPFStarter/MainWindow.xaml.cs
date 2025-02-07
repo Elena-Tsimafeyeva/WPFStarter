@@ -50,6 +50,10 @@ namespace WPFStarter
             string? toDate = ToDate.Text;
             Program.SortData(date, fromDate, toDate);
 
+            string? name = FirstName.Text;
+            Program.CheckingWord(name, out bool outWord);
+            MessageBox.Show($" outWord {outWord}");
+
 
         }
         /// <summary>
