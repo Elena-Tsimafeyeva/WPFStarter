@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.SqlServer.Server;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.FileIO;
 using System;
@@ -156,7 +157,7 @@ namespace WPFStarter
                 {
                     MessageBox.Show("Переносим!");
                     //Transferring data to a file.
-                    ExportData(fileName, fileType);
+                    ExportData(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
                 }
                 else
                 {
@@ -216,6 +217,22 @@ namespace WPFStarter
                 MessageBox.Show("Сортировка по датам 'С Год-Месяц-День ПО Год-Месяц-День'");
                 SortDate(fromDate, out outFromDate);
                 SortDate(toDate, out outToDate);
+                if(outFromDate == true && outToDate == true)
+                {
+                    DateTime fromDatFormat = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    DateTime toDateFormat = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    if(fromDatFormat< toDateFormat)
+                    {
+                        outFromDate = true;
+                        outToDate = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Дата 'С' должна быть раньше даты 'По'");
+                        outFromDate = false;
+                        outToDate = false;
+                    }
+                }
             }
         }
         ///<summary>
@@ -276,20 +293,20 @@ namespace WPFStarter
         /// E.A.T. 10-February-2025
         /// Checking the entered word.
         ///</summary>
-        public static void CreateFile(string? fileName, string? typeFile, out string? fullFileName) {
+        public static void CreateFile(string? fileName, string? typeFile, out string? fullFileName, List<Person> records) {
             fullFileName = null;
           if (fileName != ""|| typeFile != "")
             {
                 fullFileName = $"{fileName}{typeFile}";
                 MessageBox.Show($"{fullFileName}");
-                FileAvailability(fullFileName, typeFile);
+                FileAvailability(fullFileName, typeFile, records);
             }
         }
         ///<summary>
         /// E.A.T. 10-February-2025
         /// Checking that such a file does not exist yet.
         ///</summary>
-        public static void FileAvailability(string fileName, string? typeFile)
+        public static void FileAvailability(string fileName, string? typeFile, List<Person> records)
         {
             if (File.Exists(fileName))
             {
@@ -299,32 +316,11 @@ namespace WPFStarter
             {
                 if(typeFile == ".csv")
                 {
-
-                }else if(typeFile == ".xml")
+                    //Save .csv file
+                }
+                else if(typeFile == ".xml")
                 {
-                    ReadData(out List<Person> records);
-                    XElement testProgramElement = new XElement("TestProgram");
-
-                    foreach (var person in records)
-                    {
-                        XElement personElement = new XElement("Record",
-                            new XAttribute("id", person.Id),
-                            new XElement("Date", person.Date.ToString("yyyy-MM-dd")),
-                            new XElement("FirstName", person.FirstName),
-                            new XElement("LastName", person.LastName),
-                            new XElement("SurName", person.SurName),
-                            new XElement("City", person.City),
-                            new XElement("Country", person.Country)
-                        );
-
-                        testProgramElement.Add(personElement);
-                    }
-
-                    XDocument xdoc = new XDocument(testProgramElement);
-                    xdoc.Save($"{fileName}");
-
-                    MessageBox.Show("Data saved");
-
+                    SaveXML(fileName, records);
                 }
                 //Creating file
                 //FileStream fstream = new FileStream($"{fileName}", FileMode.OpenOrCreate);
@@ -335,14 +331,113 @@ namespace WPFStarter
         /// E.A.T. 11-February-2025
         /// Data export.
         ///</summary>
-        public static void ExportData(string? fileName, string? typeFile) {
-            //ReadData(out List<Person> records);
-            //int count = records.Count;
-            //MessageBox.Show($"Количество всех записей {count} ");
-            CreateFile(fileName, typeFile, out string? fullFileName);
-            
+        public static void ExportData(string? fileName, string? typeFile, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry) {
+            List<Person> records;
+            SortingDataForRecording(out records,
+                                    date,
+                                    fromDate,
+                                    toDate,
+                                    firstName,
+                                    lastName,
+                                    surName,
+                                    city,
+                                    country,
+                                    outDate,
+                                    outFromDate,
+                                    outToDate,
+                                    outFirstName,
+                                    outLastName,
+                                    outSurName,
+                                    outCity,
+                                    outCountry);
+            CreateFile(fileName, typeFile, out string? fullFileName, records);
+        }
+        ///<summary>
+        /// E.A.T. 11-February-2025
+        /// Data export to .xml.
+        ///</summary>
+        public static void SaveXML(string fileName, List<Person> records)
+        {
+            XElement testProgramElement = new XElement("TestProgram");
+
+            foreach (var person in records)
+            {
+                XElement personElement = new XElement("Record",
+                    new XAttribute("id", person.Id),
+                    new XElement("Date", person.Date.ToString("yyyy-MM-dd")),
+                    new XElement("FirstName", person.FirstName),
+                    new XElement("LastName", person.LastName),
+                    new XElement("SurName", person.SurName),
+                    new XElement("City", person.City),
+                    new XElement("Country", person.Country)
+                );
+
+                testProgramElement.Add(personElement);
+            }
+
+            XDocument xdoc = new XDocument(testProgramElement);
+            xdoc.Save($"{fileName}");
+
+            MessageBox.Show("Data saved");
+
+        }
+        ///<summary>
+        /// E.A.T. 11-February-2025
+        /// Sorting data for recording.
+        ///</summary>
+        public static void SortingDataForRecording(out List<Person> newRecords, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
+        {
+            ReadData(out List <Person> records);
+            newRecords = new List<Person>();
+            //var secondRecords = new List<Person>();
+            if (date != "" && outDate == true)
+            {
+                DateTime dateFormat = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                newRecords = records
+                    .Where(person => person.Date == dateFormat)
+                    .ToList();
+            }
+            else if (fromDate != "" && outFromDate == true && toDate != "" && outToDate == true) {
+                DateTime fromDateFormat = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                DateTime toDateFormat = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                newRecords = records
+                    .Where(person => person.Date >= fromDateFormat && person.Date <= toDateFormat)
+                    .ToList();
+            }
+            if (firstName != "" && outFirstName == true)
+            {
+                newRecords = records
+                    .Where(person => person.FirstName == firstName)
+                    .ToList();
+            }
+            if (lastName != "" && outLastName == true)
+            {
+                newRecords = records
+                    .Where(person => person.LastName == lastName)
+                    .ToList();
+            }
+            if (surName != "" && outSurName == true)
+            {
+                newRecords = records
+                    .Where(person => person.SurName == surName)
+                    .ToList();
+            }
+            if (city != "" && outCity == true)
+            {
+                newRecords = records
+                    .Where(person => person.City == city)
+                    .ToList();
+            }
+            if (country != "" && outCountry == true)
+            {
+                newRecords = records
+                    .Where(person => person.Country == country)
+                    .ToList();
+            }
+            foreach (Person person in newRecords)
+                MessageBox.Show($"{person.FirstName}");
         }
 
-        
+
     }
 }
