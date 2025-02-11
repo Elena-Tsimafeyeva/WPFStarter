@@ -54,13 +54,14 @@ namespace WPFStarter
             string? surName = SurName.Text;
             string? city = City.Text;
             string? country = Country.Text;
-            Program.SortData(date, fromDate, toDate, firstName, lastName, surName, city, country, selectedFileType);
-
+            string? fileExport = FileExport.Text;
+            Program.SortData(date, fromDate, toDate, firstName, lastName, surName, city, country, selectedFileType, fileExport);
+            
 
         }
         /// <summary>
         /// E.A.T. 22-January-2025
-        /// Checking for file availability.
+        /// Checking for file availability (for import).
         /// </summary>
         /// <param name="filePath"></param>
         public static void FileAvailability(string filePath)

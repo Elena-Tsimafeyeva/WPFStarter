@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 ///<summary>
 /// E.A.T. 25-December-2024
 /// A data entry class for each person.
@@ -19,4 +20,5 @@ namespace WPFStarter
         public string City { get; set; }
         public string Country { get; set; }
     }
+
 }

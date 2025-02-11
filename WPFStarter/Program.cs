@@ -11,9 +11,12 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Media3D;
 using System.Windows.Media.TextFormatting;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 ///<summary>
@@ -95,13 +98,12 @@ namespace WPFStarter
                 MessageBox.Show($"{record.Id}, {record.Date}, {record.FirstName}, {record.LastName}, {record.SurName}, {record.City}, {record.Country}");
             }
         }
-        //public void ExportData(string fileName) { }
-        //public void CreateFile() { }
         ///<summary>
-        /// E.A.T. 3-February--2025
+        /// E.A.T. 3-February-2025
         /// Outputting data from the DB to the list of objects.
         ///</summary>
-        public static void ReadData(List<Person> records) {
+        public static void ReadData(out List<Person> records) {
+            records = new List<Person>();
             string connectionString = "Server=localhost;Database=People;Trusted_Connection=True;TrustServerCertificate=True;";
             string query = "SELECT Id, Date, FirstName, LastName, SurName, City, Country FROM  Table_People_second";
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -127,15 +129,15 @@ namespace WPFStarter
                 }
                 reader.Close();
                 MessageBox.Show("Данные из БД Записанны!");
-                OutputDataScreenId(records);
+                //OutputDataScreenId(records);
             }
             
         }
         ///<summary>
-        /// E.A.T. 4-February--2025
+        /// E.A.T. 4-February-2025
         /// Validation of entered data for sorting. 
         ///</summary>
-        public static void SortData(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, string? fileType) {
+        public static void SortData(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, string? fileType, string? fileName) {
             CheckingDate(date, fromDate, toDate, out bool outDate, out bool outFromDate, out bool outToDate);
             MessageBox.Show($"SortData {outDate},{outFromDate},{outToDate}");
             CheckingWord(firstName, out bool outFirstName);
@@ -154,6 +156,7 @@ namespace WPFStarter
                 {
                     MessageBox.Show("Переносим!");
                     //Transferring data to a file.
+                    ExportData(fileName, fileType);
                 }
                 else
                 {
@@ -162,7 +165,7 @@ namespace WPFStarter
             }
         }
         ///<summary>
-        /// E.A.T. 4-February--2025
+        /// E.A.T. 4-February-2025
         /// Checking date format.
         ///</summary>
         public static void SortDate(string? date, out bool outDate)
@@ -183,7 +186,7 @@ namespace WPFStarter
             }
         }
         ///<summary>
-        /// E.A.T. 5-February--2025
+        /// E.A.T. 5-February-2025
         /// Checking date.
         ///</summary>
         public static void CheckingDate(string? date, string? fromDate, string? toDate, out bool outDate, out bool outFromDate, out bool outToDate)
@@ -216,7 +219,7 @@ namespace WPFStarter
             }
         }
         ///<summary>
-        /// E.A.T. 7-February--2025
+        /// E.A.T. 7-February-2025
         /// Checking the entered word.
         ///</summary>
         public static void CheckingWord(string? word, out bool outWord)
@@ -269,5 +272,77 @@ namespace WPFStarter
 
             }
         }
+        ///<summary>
+        /// E.A.T. 10-February-2025
+        /// Checking the entered word.
+        ///</summary>
+        public static void CreateFile(string? fileName, string? typeFile, out string? fullFileName) {
+            fullFileName = null;
+          if (fileName != ""|| typeFile != "")
+            {
+                fullFileName = $"{fileName}{typeFile}";
+                MessageBox.Show($"{fullFileName}");
+                FileAvailability(fullFileName, typeFile);
+            }
+        }
+        ///<summary>
+        /// E.A.T. 10-February-2025
+        /// Checking that such a file does not exist yet.
+        ///</summary>
+        public static void FileAvailability(string fileName, string? typeFile)
+        {
+            if (File.Exists(fileName))
+            {
+                MessageBox.Show($"Файл {fileName} уже есть");
+            }
+            else
+            {
+                if(typeFile == ".csv")
+                {
+
+                }else if(typeFile == ".xml")
+                {
+                    ReadData(out List<Person> records);
+                    XElement testProgramElement = new XElement("TestProgram");
+
+                    foreach (var person in records)
+                    {
+                        XElement personElement = new XElement("Record",
+                            new XAttribute("id", person.Id),
+                            new XElement("Date", person.Date.ToString("yyyy-MM-dd")),
+                            new XElement("FirstName", person.FirstName),
+                            new XElement("LastName", person.LastName),
+                            new XElement("SurName", person.SurName),
+                            new XElement("City", person.City),
+                            new XElement("Country", person.Country)
+                        );
+
+                        testProgramElement.Add(personElement);
+                    }
+
+                    XDocument xdoc = new XDocument(testProgramElement);
+                    xdoc.Save($"{fileName}");
+
+                    MessageBox.Show("Data saved");
+
+                }
+                //Creating file
+                //FileStream fstream = new FileStream($"{fileName}", FileMode.OpenOrCreate);
+                //MessageBox.Show($"Файл {fileName} создан!");
+            }
+        }
+        ///<summary>
+        /// E.A.T. 11-February-2025
+        /// Data export.
+        ///</summary>
+        public static void ExportData(string? fileName, string? typeFile) {
+            //ReadData(out List<Person> records);
+            //int count = records.Count;
+            //MessageBox.Show($"Количество всех записей {count} ");
+            CreateFile(fileName, typeFile, out string? fullFileName);
+            
+        }
+
+        
     }
 }
