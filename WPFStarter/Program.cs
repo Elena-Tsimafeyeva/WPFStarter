@@ -72,7 +72,7 @@ namespace WPFStarter
         {
             using var context = new ApplicationContext();
             {
-                context.Table_People_second.AddRange(records);
+                context.Table_People.AddRange(records);
                 context.SaveChanges();
             }
         }
@@ -106,7 +106,7 @@ namespace WPFStarter
         public static void ReadData(out List<Person> records) {
             records = new List<Person>();
             string connectionString = "Server=localhost;Database=People;Trusted_Connection=True;TrustServerCertificate=True;";
-            string query = "SELECT Id, Date, FirstName, LastName, SurName, City, Country FROM  Table_People_second";
+            string query = "SELECT Id, Date, FirstName, LastName, SurName, City, Country FROM Table_People";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
@@ -389,6 +389,7 @@ namespace WPFStarter
         {
             ReadData(out List <Person> records);
             newRecords = new List<Person>();
+            newRecords = records;
             if (date != "" && outDate == true)
             {
                 DateTime dateFormat = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -433,6 +434,7 @@ namespace WPFStarter
                     .Where(person => person.Country == country)
                     .ToList();
             }
+            
         }
 
 

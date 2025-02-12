@@ -13,7 +13,7 @@ namespace WPFStarter
     ///</summary>
     internal class ApplicationContext : DbContext
     {
-        public DbSet<Person> Table_People_second { get; set; }
+        public DbSet<Person> Table_People { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=localhost;Database=People;Trusted_Connection=True;TrustServerCertificate=True;");
