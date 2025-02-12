@@ -130,7 +130,6 @@ namespace WPFStarter
                 }
                 reader.Close();
                 MessageBox.Show("Данные из БД Записанны!");
-                //OutputDataScreenId(records);
             }
             
         }
@@ -140,23 +139,19 @@ namespace WPFStarter
         ///</summary>
         public static void SortData(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, string? fileType, string? fileName) {
             CheckingDate(date, fromDate, toDate, out bool outDate, out bool outFromDate, out bool outToDate);
-            MessageBox.Show($"SortData {outDate},{outFromDate},{outToDate}");
             CheckingWord(firstName, out bool outFirstName);
             CheckingWord(lastName, out bool outLastName);
             CheckingWord(surName, out bool outSurName);
             CheckingWord(city, out bool outCity);
             CheckingWord(country, out bool outCountry);
-            MessageBox.Show($"ФИО {outFirstName}{outLastName}{outSurName} Город {outCity} Страна {outCountry}");
             if(date != "" && outDate == false|| fromDate != "" && outFromDate == false || toDate != "" && outToDate == false || firstName != "" && outFirstName == false || lastName != "" && outLastName== false || surName != "" && outSurName== false || city!= "" && outCity== false || country!= "" && outCountry== false)
             {
                 MessageBox.Show("Исправьте данные!");
             }
             else
             {
-                if (MessageBox.Show($"Вы хотите перенести данные?\nВаши данные:\nДата за {date}\nДата с {fromDate} по {toDate}\nГород {city}\nСтрана {country}\nФамилия {firstName}\nИмя {lastName}\nОтчество{surName}\nТип файла: {fileType}","Перенос данных", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Вы хотите перенести данные?\nВаши данные:\nДата за {date}\nДата с {fromDate} по {toDate}\nГород {city}\nСтрана {country}\nФамилия {lastName}\nИмя {firstName}\nОтчество{surName}\nТип файла: {fileType}","Перенос данных", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    MessageBox.Show("Переносим!");
-                    //Transferring data to a file.
                     ExportData(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
                 }
                 else
@@ -195,10 +190,6 @@ namespace WPFStarter
             outDate = false ;
             outFromDate = false ;
             outToDate = false;
-            //SortDate(date, out bool outDate);
-            //SortDate(fromDate, out bool outFromDate);
-            //SortDate(toDate, out bool outToDate);
-            //MessageBox.Show($"{outDate}, {outFromDate}, {outToDate}");
             if (date != "" && fromDate != "" || date != "" && toDate != "")
             {
                 MessageBox.Show("Вы можете использовать даты для сортировки или 'ЗА Год-Месяц-День' или 'С Год-Месяц-День ПО Год-Месяц-День'.");
@@ -209,12 +200,10 @@ namespace WPFStarter
             }
             else if (date != "" && fromDate == "" && toDate == "")
             {
-                MessageBox.Show("Сортировка по дате 'ЗА Год-Месяц-День'");
                 SortDate(date, out outDate);
             }
             else if (date == "" && fromDate != "" && toDate != "")
             {
-                MessageBox.Show("Сортировка по датам 'С Год-Месяц-День ПО Год-Месяц-День'");
                 SortDate(fromDate, out outFromDate);
                 SortDate(toDate, out outToDate);
                 if(outFromDate == true && outToDate == true)
@@ -316,15 +305,12 @@ namespace WPFStarter
             {
                 if(typeFile == ".csv")
                 {
-                    //Save .csv file
+                    SaveCSV(fileName, records);
                 }
                 else if(typeFile == ".xml")
                 {
                     SaveXML(fileName, records);
                 }
-                //Creating file
-                //FileStream fstream = new FileStream($"{fileName}", FileMode.OpenOrCreate);
-                //MessageBox.Show($"Файл {fileName} создан!");
             }
         }
         ///<summary>
@@ -382,6 +368,20 @@ namespace WPFStarter
 
         }
         ///<summary>
+        /// E.A.T. 12-February-2025
+        /// Data export to .csv.
+        ///</summary>
+        public static void SaveCSV(string filePath, List<Person> records)
+        {
+            using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8)) {
+                foreach (var person in records)
+                {
+                    writer.WriteLine($"{person.Id};{person.Date:yyyy-MM-dd};{person.FirstName};{person.LastName};{person.SurName};{person.City};{person.Country}");
+                }
+            }
+                
+        }
+        ///<summary>
         /// E.A.T. 11-February-2025
         /// Sorting data for recording.
         ///</summary>
@@ -389,7 +389,6 @@ namespace WPFStarter
         {
             ReadData(out List <Person> records);
             newRecords = new List<Person>();
-            //var secondRecords = new List<Person>();
             if (date != "" && outDate == true)
             {
                 DateTime dateFormat = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -434,8 +433,6 @@ namespace WPFStarter
                     .Where(person => person.Country == country)
                     .ToList();
             }
-            foreach (Person person in newRecords)
-                MessageBox.Show($"{person.FirstName}");
         }
 
 

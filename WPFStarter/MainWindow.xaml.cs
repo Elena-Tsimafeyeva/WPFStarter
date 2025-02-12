@@ -48,7 +48,6 @@ namespace WPFStarter
             string? date = Date.Text;
             string? fromDate = FromDate.Text;
             string? toDate = ToDate.Text;
-
             string? firstName = FirstName.Text;
             string? lastName = LastName.Text;
             string? surName = SurName.Text;
@@ -56,8 +55,6 @@ namespace WPFStarter
             string? country = Country.Text;
             string? fileExport = FileExport.Text;
             Program.SortData(date, fromDate, toDate, firstName, lastName, surName, city, country, selectedFileType, fileExport);
-            
-
         }
         /// <summary>
         /// E.A.T. 22-January-2025
