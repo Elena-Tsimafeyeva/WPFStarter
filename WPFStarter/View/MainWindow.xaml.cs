@@ -1,14 +1,7 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using System.IO;
+using WPFStarter.ProgramLogic;
+using Microsoft.Win32;
 
 /// <summary>
 /// E.A.T. 20-January-2025
@@ -29,8 +22,15 @@ namespace WPFStarter
         /// </summary>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string? filePath = PathImport.Text;
-            FileAvailability(filePath);
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text files (*.csv)|*.csv|All files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filePath = openFileDialog.FileName;
+                FileAvailability(filePath);
+            }
+            //string? filePath = PathImport.Text;
+            //FileAvailability(filePath);
         }
         /// <summary>
         /// E.A.T. 20-January-2025
@@ -40,21 +40,27 @@ namespace WPFStarter
         /// </summary>
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            //Checking the file type.
-            string? selectedFileType = null;
-            FileType(out selectedFileType);
-            //MessageBox.Show($"Проверка в Button_Click_1 {selectedFileType}");
-            //Sorting the required data
-            string? date = Date.Text;
-            string? fromDate = FromDate.Text;
-            string? toDate = ToDate.Text;
-            string? firstName = FirstName.Text;
-            string? lastName = LastName.Text;
-            string? surName = SurName.Text;
-            string? city = City.Text;
-            string? country = Country.Text;
-            string? fileExport = FileExport.Text;
-            Program.SortData(date, fromDate, toDate, firstName, lastName, surName, city, country, selectedFileType, fileExport);
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string fileExport = saveFileDialog.FileName;
+                // Здесь вы можете добавить код для сохранения данных в выбранный файл
+                string? selectedFileType = null;
+                FileType(out selectedFileType);
+                MessageBox.Show($"Проверка в Button_Click_1 {selectedFileType}");
+                //Sorting the required data
+                string? date = Date.Text;
+                string? fromDate = FromDate.Text;
+                string? toDate = ToDate.Text;
+                string? firstName = FirstName.Text;
+                string? lastName = LastName.Text;
+                string? surName = SurName.Text;
+                string? city = City.Text;
+                string? country = Country.Text;
+                //string? fileExport = FileExport.Text;
+                Program.SortData(date, fromDate, toDate, firstName, lastName, surName, city, country, selectedFileType, fileExport);
+            }
         }
         /// <summary>
         /// E.A.T. 22-January-2025

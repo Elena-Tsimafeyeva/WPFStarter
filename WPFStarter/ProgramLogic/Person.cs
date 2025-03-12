@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-///<summary>
+﻿///<summary>
 /// E.A.T. 25-December-2024
 /// A data entry class for each person.
 ///</summary>
-namespace WPFStarter
+namespace WPFStarter.ProgramLogic
 {
     internal class Person
     {
