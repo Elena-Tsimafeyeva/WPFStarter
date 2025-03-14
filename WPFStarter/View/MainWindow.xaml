@@ -7,47 +7,61 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
-        
+
+
         <TabControl>
             <TabItem Header="Output">
                 <Grid Background="#FFE5E5E5">
-                <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Извлечение данных из файла .csv в БД" VerticalAlignment="Top" Background="#FFA6A6A6"/>
-                <TextBlock HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="Путь" VerticalAlignment="Top"/>
-                <TextBox x:Name="PathImport" HorizontalAlignment="Left" Margin="80,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="600"/>
-                <Button Content="Извлечь" HorizontalAlignment="Left" Margin="700,35,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="34*"/>
+                        <ColumnDefinition Width="363*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Извлечение данных из файла .csv в БД" VerticalAlignment="Top" Background="#FFA6A6A6" Grid.ColumnSpan="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="Путь" VerticalAlignment="Top"/>
+                    <TextBox x:Name="PathImport" IsReadOnly="True" HorizontalAlignment="Left" Margin="12,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="600" Grid.Column="1"/>
+                    <Button Content="Извлечь" HorizontalAlignment="Left" Margin="632,35,0,0" VerticalAlignment="Top" Click="Button_Click" Grid.Column="1"/>
                 </Grid>
-                </TabItem>
+            </TabItem>
             <TabItem Header="Input">
                 <Grid Background="#FFE5E5E5">
-                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Экспорт данных из БД в файл .csv или .XML" VerticalAlignment="Top" Background="#FFA6A6A6"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="Имя файла" VerticalAlignment="Top"/>
-                    <TextBox x:Name="FileExport" HorizontalAlignment="Left" Margin="80,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="600"/>
-                    <Button Content="Экспорт" HorizontalAlignment="Left" Margin="700,35,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,60,0,0" TextWrapping="Wrap" Text="Тип файла" VerticalAlignment="Top"/>
-                    <StackPanel x:Name="stackPanel" Orientation="Horizontal">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="7*"/>
+                        <ColumnDefinition Width="24*"/>
+                        <ColumnDefinition Width="763*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock HorizontalAlignment="Left" Margin="3,10,0,0" TextWrapping="Wrap" Text="Экспорт данных из БД в файл .csv или .XML" VerticalAlignment="Top" Background="#FFA6A6A6" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="3,35,0,0" TextWrapping="Wrap" Text="Имя файла" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <TextBox x:Name="FileExport" Text="Здесь будет путь файла"  IsReadOnly="True" HorizontalAlignment="Left" Margin="49,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="600" Grid.Column="2"/>
+                    <Button Content="Экспорт" HorizontalAlignment="Left" Margin="669,35,0,0" VerticalAlignment="Top" Click="Button_Click_1" Grid.Column="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="3,60,0,0" TextWrapping="Wrap" Text="Тип файла" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <StackPanel x:Name="stackPanel" Orientation="Horizontal" Grid.ColumnSpan="3">
                         <RadioButton x:Name="radioButton1" Content=".csv" HorizontalAlignment="Left" Margin="80,60,0,0" VerticalAlignment="Top" GroupName="Type" IsChecked="True"/>
                         <RadioButton x:Name="radioButton2" Content=".xml" HorizontalAlignment="Left" Margin="18,60,0,0" VerticalAlignment="Top" GroupName="Type"/>
                     </StackPanel>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,85,0,0" TextWrapping="Wrap" Text="Выбор данных для экспорта" VerticalAlignment="Top" Background="#FFA6A6A6"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,110,0,0" TextWrapping="Wrap" Text="По дате" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,135,0,0" TextWrapping="Wrap" Text="за" VerticalAlignment="Top"/>
-                    <TextBox x:Name="Date" HorizontalAlignment="Left" Margin="80,135,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,160,0,0" TextWrapping="Wrap" Text="с" VerticalAlignment="Top"/>
-                    <TextBox x:Name="FromDate" HorizontalAlignment="Left" Margin="80,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="215,160,0,0" TextWrapping="Wrap" Text="по" VerticalAlignment="Top"/>
-                    <TextBox x:Name="ToDate" HorizontalAlignment="Left" Margin="280,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,185,0,0" TextWrapping="Wrap" Text="По городу" VerticalAlignment="Top"/>
-                    <TextBox x:Name="City" HorizontalAlignment="Left" Margin="10,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,235,0,0" TextWrapping="Wrap" Text="По стране" VerticalAlignment="Top"/>
-                    <TextBox x:Name="Country" HorizontalAlignment="Left" Margin="10,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="155,185,0,0" TextWrapping="Wrap" Text="По ФИО" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="155,210,0,0" TextWrapping="Wrap" Text="Фамилия" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="155,235,0,0" TextWrapping="Wrap" Text="Имя" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="155,260,0,0" TextWrapping="Wrap" Text="Отчество" VerticalAlignment="Top"/>
-                    <TextBox x:Name="LastName" HorizontalAlignment="Left" Margin="220,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <TextBox x:Name="FirstName" HorizontalAlignment="Left" Margin="220,235,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <TextBox x:Name="SurName" HorizontalAlignment="Left" Margin="220,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="3,85,0,0" TextWrapping="Wrap" Text="Выбор данных для экспорта" VerticalAlignment="Top" Background="#FFA6A6A6" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="3,110,0,0" TextWrapping="Wrap" Text="По дате" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="3,135,0,0" TextWrapping="Wrap" Text="за" VerticalAlignment="Top" Grid.Column="1"/>
+
+                    <DatePicker x:Name="Date" HorizontalAlignment="Left" Margin="49,135,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="3,160,0,0" TextWrapping="Wrap" Text="с" VerticalAlignment="Top" Grid.Column="1"/>
+                    <DatePicker x:Name="FromDate" HorizontalAlignment="Left" Margin="49,160,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+
+                    <TextBlock HorizontalAlignment="Left" Margin="184,160,0,0" TextWrapping="Wrap" Text="по" VerticalAlignment="Top" Grid.Column="2"/>
+                    <DatePicker x:Name="ToDate" HorizontalAlignment="Left" Margin="249,160,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+
+                    <TextBlock HorizontalAlignment="Left" Margin="3,185,0,0" TextWrapping="Wrap" Text="По городу" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <TextBox x:Name="City" HorizontalAlignment="Left" Margin="3,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="3,235,0,0" TextWrapping="Wrap" Text="По стране" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <TextBox x:Name="Country" HorizontalAlignment="Left" Margin="3,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="124,185,0,0" TextWrapping="Wrap" Text="По ФИО" VerticalAlignment="Top" Grid.Column="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="124,210,0,0" TextWrapping="Wrap" Text="Фамилия" VerticalAlignment="Top" Grid.Column="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="124,235,0,0" TextWrapping="Wrap" Text="Имя" VerticalAlignment="Top" Grid.Column="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="124,260,0,0" TextWrapping="Wrap" Text="Отчество" VerticalAlignment="Top" Grid.Column="2"/>
+                    <TextBox x:Name="LastName" HorizontalAlignment="Left" Margin="189,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <TextBox x:Name="FirstName" HorizontalAlignment="Left" Margin="189,235,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <TextBox x:Name="SurName" HorizontalAlignment="Left" Margin="189,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+
+
                 </Grid>
             </TabItem>
         </TabControl>

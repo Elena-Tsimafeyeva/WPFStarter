@@ -2,6 +2,7 @@
 using System.IO;
 using WPFStarter.ProgramLogic;
 using Microsoft.Win32;
+using System.Windows.Controls;
 
 /// <summary>
 /// E.A.T. 20-January-2025
@@ -27,8 +28,10 @@ namespace WPFStarter
             if (openFileDialog.ShowDialog() == true)
             {
                 string filePath = openFileDialog.FileName;
+                PathImport.Text = filePath;
                 FileAvailability(filePath);
             }
+            
             //string? filePath = PathImport.Text;
             //FileAvailability(filePath);
         }
@@ -45,10 +48,11 @@ namespace WPFStarter
             if (saveFileDialog.ShowDialog() == true)
             {
                 string fileExport = saveFileDialog.FileName;
-                // Здесь вы можете добавить код для сохранения данных в выбранный файл
                 string? selectedFileType = null;
                 FileType(out selectedFileType);
                 MessageBox.Show($"Проверка в Button_Click_1 {selectedFileType}");
+
+                FileExport.Text = fileExport+selectedFileType;
                 //Sorting the required data
                 string? date = Date.Text;
                 string? fromDate = FromDate.Text;

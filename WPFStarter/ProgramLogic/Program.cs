@@ -158,7 +158,9 @@ namespace WPFStarter.ProgramLogic
             {
                 try
                 {
-                    DateTime dateFormat = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    DateTime parsedDate = DateTime.ParseExact(date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    string stringParsedDate = parsedDate.ToString("yyyy-MM-dd");
+                    DateTime dateFormat = DateTime.ParseExact(stringParsedDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                     MessageBox.Show($"{dateFormat}");
                 }
                 catch (FormatException)
@@ -195,9 +197,15 @@ namespace WPFStarter.ProgramLogic
                 SortDate(toDate, out outToDate);
                 if (outFromDate == true && outToDate == true)
                 {
-                    DateTime fromDatFormat = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    DateTime toDateFormat = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    if (fromDatFormat < toDateFormat)
+                    DateTime parsedFromDate = DateTime.ParseExact(fromDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    string stringParsedFromDate = parsedFromDate.ToString("yyyy-MM-dd");
+                    DateTime fromDateFormat = DateTime.ParseExact(stringParsedFromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    //DateTime fromDatFormat = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    DateTime parsedToDate = DateTime.ParseExact(toDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    string stringParsedToDate = parsedToDate.ToString("yyyy-MM-dd");
+                    DateTime toDateFormat = DateTime.ParseExact(stringParsedToDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    //DateTime toDateFormat = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                    if (fromDateFormat < toDateFormat)
                     {
                         outFromDate = true;
                         outToDate = true;
@@ -382,15 +390,25 @@ namespace WPFStarter.ProgramLogic
             newRecords = records;
             if (date != "" && outDate == true)
             {
-                DateTime dateFormat = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                DateTime parsedDate = DateTime.ParseExact(date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                string stringParsedDate = parsedDate.ToString("yyyy-MM-dd");
+                DateTime dateFormat = DateTime.ParseExact(stringParsedDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 newRecords = records
                     .Where(person => person.Date == dateFormat)
                     .ToList();
             }
             else if (fromDate != "" && outFromDate == true && toDate != "" && outToDate == true)
             {
-                DateTime fromDateFormat = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                DateTime toDateFormat = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                DateTime parsedFromDate = DateTime.ParseExact(fromDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                string stringParsedFromDate = parsedFromDate.ToString("yyyy-MM-dd");
+                DateTime fromDateFormat = DateTime.ParseExact(stringParsedFromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                //DateTime fromDatFormat = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                DateTime parsedToDate = DateTime.ParseExact(toDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                string stringParsedToDate = parsedToDate.ToString("yyyy-MM-dd");
+                DateTime toDateFormat = DateTime.ParseExact(stringParsedToDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                //DateTime toDateFormat = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                //DateTime fromDateFormat = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                //DateTime toDateFormat = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 newRecords = records
                     .Where(person => person.Date >= fromDateFormat && person.Date <= toDateFormat)
                     .ToList();
