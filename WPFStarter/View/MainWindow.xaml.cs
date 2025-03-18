@@ -3,6 +3,7 @@ using System.IO;
 using WPFStarter.ProgramLogic;
 using Microsoft.Win32;
 using System.Windows.Controls;
+using MahApps.Metro.Controls;
 
 /// <summary>
 /// E.A.T. 20-January-2025
@@ -10,7 +11,7 @@ using System.Windows.Controls;
 /// </summary>
 namespace WPFStarter
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         public MainWindow()
         {

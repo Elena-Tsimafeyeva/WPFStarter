@@ -4,6 +4,18 @@
              xmlns:local="clr-namespace:WPFStarter"
              StartupUri="View\MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <!-- Theme setting -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <!-- Title -->
+            <DataTemplate x:Key="CustomWindowTitleTemplate">
+                <TextBlock Text="{Binding}" FontWeight="Bold" FontSize="18"/>
+            </DataTemplate>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
