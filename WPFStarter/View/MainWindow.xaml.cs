@@ -100,5 +100,51 @@ namespace WPFStarter
                 //MessageBox.Show($"Тип файла: {selectedFileType}");
             }
         }
+        /// <summary>
+        /// E.A.T. 21-March-2025
+        /// Blocking unnecessary elements.
+        /// </summary>
+        private void Date_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Date.SelectedDate.HasValue) { 
+                ToDate.IsEnabled = false;
+                FromDate.IsEnabled = false;
+            }
+            else
+            {
+                ToDate.IsEnabled = true;
+                FromDate.IsEnabled = true;
+            }
+        }
+        /// <summary>
+        /// E.A.T. 21-March-2025
+        /// Blocking unnecessary elements.
+        /// </summary>
+        private void FromDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (FromDate.SelectedDate.HasValue)
+            {
+                Date.IsEnabled = false;
+            }
+            else
+            {
+                Date.IsEnabled = true;
+            }
+        }
+        /// <summary>
+        /// E.A.T. 21-March-2025
+        /// Blocking unnecessary elements.
+        /// </summary>
+        private void ToDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ToDate.SelectedDate.HasValue)
+            {
+                Date.IsEnabled = false;
+            }
+            else
+            {
+                Date.IsEnabled = true;
+            }
+        }
     }
 }

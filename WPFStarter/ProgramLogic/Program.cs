@@ -17,9 +17,15 @@ namespace WPFStarter.ProgramLogic
         public static void ImportCsv(string filePath)
         {
             var records = new List<Person>();
-            ReadingData(records, filePath);
-            RecordDatabase(records);
-            OutputDataScreen(records);
+            try
+            {
+                ReadingData(records, filePath);
+                RecordDatabase(records);
+                OutputDataScreen(records);
+            }
+            catch (Exception ex) {
+                MessageBox.Show($"Ошибка импорта {ex}");
+            }
         }
         ///<summary>
         /// E.A.T. 29-January-2025

@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:WPFStarter"
         mc:Ignorable="d"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        Title="WPF Starter (Internship)" TitleForeground="DodgerBlue" Height="450" Width="800"
+        Title=" WPF Starter (Internship)" TitleForeground="DodgerBlue" Height="450" Width="800"
         TitleTemplate="{StaticResource ResourceKey=CustomWindowTitleTemplate}"
         TitleCharacterCasing="Normal"
         WindowTitleBrush="LightGray"
-        Icon="/Images/IBA.png">
+        >
     <Grid>
 
 
@@ -48,12 +48,12 @@
                     <TextBlock HorizontalAlignment="Left" Margin="3,115,0,0" TextWrapping="Wrap" Text="По дате" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
                     <TextBlock HorizontalAlignment="Left" Margin="3,135,0,0" TextWrapping="Wrap" Text="за" VerticalAlignment="Top" Grid.Column="1"/>
 
-                    <DatePicker x:Name="Date" HorizontalAlignment="Left" Margin="5,135,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+                    <DatePicker x:Name="Date" HorizontalAlignment="Left" Margin="5,135,0,0" VerticalAlignment="Top" Grid.Column="2" SelectedDateChanged="Date_SelectedDateChanged"/>
                     <TextBlock HorizontalAlignment="Left" Margin="3,160,0,0" TextWrapping="Wrap" Text="с" VerticalAlignment="Top" Grid.Column="1"/>
-                    <DatePicker x:Name="FromDate" HorizontalAlignment="Left" Margin="5,160,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+                    <DatePicker x:Name="FromDate" HorizontalAlignment="Left" Margin="5,160,0,0" VerticalAlignment="Top" Grid.Column="2" SelectedDateChanged="FromDate_SelectedDateChanged"/>
 
                     <TextBlock HorizontalAlignment="Left" Margin="184,160,0,0" TextWrapping="Wrap" Text="по" VerticalAlignment="Top" Grid.Column="2"/>
-                    <DatePicker x:Name="ToDate" HorizontalAlignment="Left" Margin="213,160,0,0" VerticalAlignment="Top" Grid.Column="2"/>
+                    <DatePicker x:Name="ToDate" HorizontalAlignment="Left" Margin="213,160,0,0" VerticalAlignment="Top" Grid.Column="2" SelectedDateChanged="ToDate_SelectedDateChanged"/>
 
                     <TextBlock HorizontalAlignment="Left" Margin="3,187,0,0" TextWrapping="Wrap" Text="По городу" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
                     <TextBox x:Name="City" HorizontalAlignment="Left" Margin="3,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Grid.Column="1"/>
