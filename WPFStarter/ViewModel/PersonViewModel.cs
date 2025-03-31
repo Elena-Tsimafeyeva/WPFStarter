@@ -27,7 +27,7 @@ namespace WPFStarter
         private string fileExport = "Здесь будет путь файла";
         private string fileImport = "Здесь будет путь файла";
         private bool typeXML;
-        private bool typeCSV;
+        private bool typeCSV = true;
 
 
         /// <summary>
