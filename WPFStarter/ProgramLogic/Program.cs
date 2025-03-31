@@ -1,135 +1,16 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.VisualBasic.FileIO;
-using System.Globalization;
-using System.IO;
-using System.Text;
+﻿using System.Globalization;
 using System.Windows;
-using System.Xml.Linq;
-///<summary>
-/// E.A.T. 25-December-2024
-/// Reading data from a .csv file and transferring it to a list of objects.
-/// Writing data to the database.
-///</summary>
 namespace WPFStarter.ProgramLogic
 {
     internal class Program
     {
-        public static void ImportCsv(string filePath)
-        {
-            var records = new List<Person>();
-            try
-            {
-                ReadingData(records, filePath);
-                RecordDatabase(records);
-                OutputDataScreen(records);
-            }
-            catch (Exception ex) {
-                MessageBox.Show($"Ошибка импорта {ex}");
-            }
-        }
-        ///<summary>
-        /// E.A.T. 29-January-2025
-        /// Reading data from a .csv file and transferring it to a list of objects.
-        ///</summary>
-        public static void ReadingData(List<Person> records, string filePath)
-        {
-            using TextFieldParser tfp = new(filePath);
-            {
-                tfp.TextFieldType = FieldType.Delimited;
-                tfp.SetDelimiters(";");
-
-                while (!tfp.EndOfData)
-                {
-                    var values = tfp.ReadFields();
-                    var record = new Person
-                    {
-                        Date = DateTime.Parse(values[0]),
-                        FirstName = values[1],
-                        LastName = values[2],
-                        SurName = values[3],
-                        City = values[4],
-                        Country = values[5]
-                    };
-
-                    records.Add(record);
-                }
-            }
-        }
-        ///<summary>
-        /// E.A.T. 30-January-2025
-        /// Record data to the database.
-        ///</summary>
-        public static void RecordDatabase(List<Person> records)
-        {
-            using var context = new ApplicationContext();
-            {
-                context.Table_People.AddRange(records);
-                context.SaveChanges();
-            }
-        }
-        ///<summary>
-        /// E.A.T. 30-January-2025
-        /// Outputting data from a .csv file to the screen.
-        ///</summary>
-        public static void OutputDataScreen(List<Person> records)
-        {
-            foreach (var record in records)
-            {
-                MessageBox.Show($"{record.Date}, {record.FirstName}, {record.LastName}, {record.SurName}, {record.City}, {record.Country}");
-            }
-            MessageBox.Show("Данные записанны!");
-        }
-        ///<summary>
-        /// E.A.T. 3-February-2025
-        /// Outputting data from the DB to the screen.
-        ///</summary>
-        public static void OutputDataScreenId(List<Person> records)
-        {
-            foreach (var record in records)
-            {
-                MessageBox.Show($"{record.Id}, {record.Date}, {record.FirstName}, {record.LastName}, {record.SurName}, {record.City}, {record.Country}");
-            }
-        }
-        ///<summary>
-        /// E.A.T. 3-February-2025
-        /// Outputting data from the DB to the list of objects.
-        ///</summary>
-        public static void ReadData(out List<Person> records)
-        {
-            records = new List<Person>();
-            string connectionString = "Server=localhost;Database=People;Trusted_Connection=True;TrustServerCertificate=True;";
-            string query = "SELECT Id, Date, FirstName, LastName, SurName, City, Country FROM Table_People";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query, connection);
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    Person person = new Person
-                    {
-                        Id = (int)reader["Id"],
-                        Date = (DateTime)reader["Date"],
-                        FirstName = reader["FirstName"].ToString(),
-                        LastName = reader["LastName"].ToString(),
-                        SurName = reader["SurName"].ToString(),
-                        City = reader["City"].ToString(),
-                        Country = reader["Country"].ToString()
-
-                    };
-                    records.Add(person);
-
-                }
-                reader.Close();
-                MessageBox.Show("Данные из БД Записанны!");
-            }
-
-        }
         ///<summary>
         /// E.A.T. 4-February-2025
         /// Validation of entered data for sorting. 
+        /// E.A.T. 25-March-2025
+        /// Adding asynchrony to data export.
         ///</summary>
-        public static void SortData(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, string? fileType, string? fileName)
+        public static async Task SortData(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, string? fileType, string? fileName)
         {
             CheckingDate(date, fromDate, toDate, out bool outDate, out bool outFromDate, out bool outToDate);
             CheckingWord(firstName, out bool outFirstName);
@@ -145,7 +26,9 @@ namespace WPFStarter.ProgramLogic
             {
                 if (MessageBox.Show($"Вы хотите перенести данные?\nВаши данные:\nДата за {date}\nДата с {fromDate} по {toDate}\nГород {city}\nСтрана {country}\nФамилия {lastName}\nИмя {firstName}\nОтчество{surName}\nТип файла: {fileType}", "Перенос данных", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    ExportData(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
+                    Task.Run(() => { 
+                        ImportExport.ExportData(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry); 
+                    });
                 }
                 else
                 {
@@ -164,6 +47,7 @@ namespace WPFStarter.ProgramLogic
             {
                 try
                 {
+
                     DateTime parsedDate = DateTime.ParseExact(date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     string stringParsedDate = parsedDate.ToString("yyyy-MM-dd");
                     DateTime dateFormat = DateTime.ParseExact(stringParsedDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -206,11 +90,9 @@ namespace WPFStarter.ProgramLogic
                     DateTime parsedFromDate = DateTime.ParseExact(fromDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     string stringParsedFromDate = parsedFromDate.ToString("yyyy-MM-dd");
                     DateTime fromDateFormat = DateTime.ParseExact(stringParsedFromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    //DateTime fromDatFormat = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                     DateTime parsedToDate = DateTime.ParseExact(toDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     string stringParsedToDate = parsedToDate.ToString("yyyy-MM-dd");
                     DateTime toDateFormat = DateTime.ParseExact(stringParsedToDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    //DateTime toDateFormat = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                     if (fromDateFormat < toDateFormat)
                     {
                         outFromDate = true;
@@ -279,119 +161,15 @@ namespace WPFStarter.ProgramLogic
 
             }
         }
-        ///<summary>
-        /// E.A.T. 10-February-2025
-        /// Checking the entered word.
-        ///</summary>
-        public static void CreateFile(string? fileName, string? typeFile, out string? fullFileName, List<Person> records)
-        {
-            fullFileName = null;
-            if (fileName != "" || typeFile != "")
-            {
-                fullFileName = $"{fileName}{typeFile}";
-                MessageBox.Show($"{fullFileName}");
-                FileAvailability(fullFileName, typeFile, records);
-            }
-        }
-        ///<summary>
-        /// E.A.T. 10-February-2025
-        /// Checking that such a file does not exist yet.
-        ///</summary>
-        public static void FileAvailability(string fileName, string? typeFile, List<Person> records)
-        {
-            if (File.Exists(fileName))
-            {
-                MessageBox.Show($"Файл {fileName} уже есть");
-            }
-            else
-            {
-                if (typeFile == ".csv")
-                {
-                    SaveCSV(fileName, records);
-                }
-                else if (typeFile == ".xml")
-                {
-                    SaveXML(fileName, records);
-                }
-            }
-        }
-        ///<summary>
-        /// E.A.T. 11-February-2025
-        /// Data export.
-        ///</summary>
-        public static void ExportData(string? fileName, string? typeFile, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
-        {
-            List<Person> records;
-            SortingDataForRecording(out records,
-                                    date,
-                                    fromDate,
-                                    toDate,
-                                    firstName,
-                                    lastName,
-                                    surName,
-                                    city,
-                                    country,
-                                    outDate,
-                                    outFromDate,
-                                    outToDate,
-                                    outFirstName,
-                                    outLastName,
-                                    outSurName,
-                                    outCity,
-                                    outCountry);
-            CreateFile(fileName, typeFile, out string? fullFileName, records);
-        }
-        ///<summary>
-        /// E.A.T. 11-February-2025
-        /// Data export to .xml.
-        ///</summary>
-        public static void SaveXML(string fileName, List<Person> records)
-        {
-            XElement testProgramElement = new XElement("TestProgram");
-
-            foreach (var person in records)
-            {
-                XElement personElement = new XElement("Record",
-                    new XAttribute("id", person.Id),
-                    new XElement("Date", person.Date.ToString("yyyy-MM-dd")),
-                    new XElement("FirstName", person.FirstName),
-                    new XElement("LastName", person.LastName),
-                    new XElement("SurName", person.SurName),
-                    new XElement("City", person.City),
-                    new XElement("Country", person.Country)
-                );
-
-                testProgramElement.Add(personElement);
-            }
-
-            XDocument xdoc = new XDocument(testProgramElement);
-            xdoc.Save($"{fileName}");
-
-            MessageBox.Show("Data saved");
-
-        }
-        ///<summary>
-        /// E.A.T. 12-February-2025
-        /// Data export to .csv.
-        ///</summary>
-        public static void SaveCSV(string filePath, List<Person> records)
-        {
-            using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
-            {
-                foreach (var person in records)
-                {
-                    writer.WriteLine($"{person.Id};{person.Date:yyyy-MM-dd};{person.FirstName};{person.LastName};{person.SurName};{person.City};{person.Country}");
-                }
-            }
-
-        }
+        
         ///<summary>
         /// E.A.T. 11-February-2025
         /// Sorting data for recording.
         ///</summary>
         public static void SortingDataForRecording(out List<Person> newRecords, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
-            ReadData(out List<Person> records);
+            ImportExport.ReadData(out List<Person> records);
+
             newRecords = new List<Person>();
             newRecords = records;
             if (date != "" && outDate == true)
@@ -408,13 +186,9 @@ namespace WPFStarter.ProgramLogic
                 DateTime parsedFromDate = DateTime.ParseExact(fromDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                 string stringParsedFromDate = parsedFromDate.ToString("yyyy-MM-dd");
                 DateTime fromDateFormat = DateTime.ParseExact(stringParsedFromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                //DateTime fromDatFormat = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 DateTime parsedToDate = DateTime.ParseExact(toDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                 string stringParsedToDate = parsedToDate.ToString("yyyy-MM-dd");
                 DateTime toDateFormat = DateTime.ParseExact(stringParsedToDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                //DateTime toDateFormat = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                //DateTime fromDateFormat = DateTime.ParseExact(fromDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                //DateTime toDateFormat = DateTime.ParseExact(toDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 newRecords = records
                     .Where(person => person.Date >= fromDateFormat && person.Date <= toDateFormat)
                     .ToList();

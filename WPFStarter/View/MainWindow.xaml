@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFStarter"
+        
         mc:Ignorable="d"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         Title=" WPF Starter (Internship)" TitleForeground="DodgerBlue" Height="450" Width="800"
@@ -11,6 +12,9 @@
         TitleCharacterCasing="Normal"
         WindowTitleBrush="LightGray"
         >
+    <Window.DataContext>
+        <local:PersonViewModel />
+    </Window.DataContext>
     <Grid>
 
 
@@ -24,8 +28,8 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Извлечение данных из файла .csv в БД" VerticalAlignment="Top" Background="#FFC2D0D9" Grid.ColumnSpan="3"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" Text="Путь" VerticalAlignment="Top"/>
-                    <TextBox x:Name="PathImport" IsReadOnly="True" Text="Здесь будет путь файла" HorizontalAlignment="Left" Margin="12,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="600" Grid.Column="1" Grid.ColumnSpan="2" Background="#FFE5E5E5" Foreground="#FF545454"/>
-                    <Button Content="Извлечь" HorizontalAlignment="Left" Margin="577,35,0,0" VerticalAlignment="Top" Click="Button_Click" Grid.Column="2"/>
+                    <TextBox IsReadOnly="True" Text="{Binding FileImport}" HorizontalAlignment="Left" Margin="12,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="600" Grid.Column="1" Grid.ColumnSpan="2" Background="#FFE5E5E5" Foreground="#FF545454"/>
+                    <Button Command="{Binding ImportCommand}" Content="Извлечь" HorizontalAlignment="Left" Margin="577,35,0,0" VerticalAlignment="Top"  Grid.Column="2"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Input">
@@ -37,35 +41,43 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock HorizontalAlignment="Left" Margin="3,10,0,0" TextWrapping="Wrap" Text="Экспорт данных из БД в файл .csv или .XML" VerticalAlignment="Top" Background="#FFC2D0D9" Grid.ColumnSpan="2" Grid.Column="1"/>
                     <TextBlock HorizontalAlignment="Left" Margin="3,40,0,0" TextWrapping="Wrap" Text="Имя файла" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
-                    <TextBox x:Name="FileExport" Text="Здесь будет путь файла"  IsReadOnly="True" HorizontalAlignment="Left" Margin="49,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="600" Grid.Column="2" Background="#FFE5E5E5" CaretBrush="Black" Foreground="#FF545454"/>
-                    <Button Content="Экспорт" HorizontalAlignment="Left" Margin="669,40,0,0" VerticalAlignment="Top" Click="Button_Click_1" Grid.Column="2"/>
+                    <TextBox Text="{Binding FileExport}"  IsReadOnly="True" HorizontalAlignment="Left" Margin="49,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="600" Grid.Column="2" Background="#FFE5E5E5" CaretBrush="Black" Foreground="#FF545454"/>
+                    <Button Command="{Binding ExportCommand}" Content="Экспорт" HorizontalAlignment="Left" Margin="669,40,0,0" VerticalAlignment="Top" Grid.Column="2"/>
                     <TextBlock HorizontalAlignment="Left" Margin="3,70,0,0" TextWrapping="Wrap" Text="Тип файла" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
-                    <StackPanel x:Name="stackPanel" Orientation="Horizontal" Grid.ColumnSpan="3">
-                        <RadioButton x:Name="radioButton1" Content=".csv"  HorizontalAlignment="Left" Margin="80,70,0,0" VerticalAlignment="Top" GroupName="Type" IsChecked="True" BorderBrush="#FFE5E5E5" Background="#FFE5E5E5"/>
-                        <RadioButton x:Name="radioButton2" Content=".xml" HorizontalAlignment="Left" Margin="18,70,0,0" VerticalAlignment="Top" GroupName="Type" Background="#FFE5E5E5"/>
-                    </StackPanel>
+                    
+             <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3">
+                        <RadioButton Content=".csv"  HorizontalAlignment="Left" Margin="80,70,0,0" VerticalAlignment="Top" GroupName="Type" IsChecked="{Binding TypeCSV, Mode=TwoWay}" BorderBrush="#FFE5E5E5" Background="#FFE5E5E5"/>
+                        <RadioButton Content=".xml" HorizontalAlignment="Left" Margin="18,70,0,0" VerticalAlignment="Top" GroupName="Type" IsChecked="{Binding TypeXML, Mode=TwoWay}" Background="#FFE5E5E5"/>
+             </StackPanel>
+
+                    
                     <TextBlock HorizontalAlignment="Left" Margin="3,95,0,0" TextWrapping="Wrap" Text="Выбор данных для экспорта" VerticalAlignment="Top" Background="#FFC2D0D9" Grid.ColumnSpan="2" Grid.Column="1"/>
                     <TextBlock HorizontalAlignment="Left" Margin="3,115,0,0" TextWrapping="Wrap" Text="По дате" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
                     <TextBlock HorizontalAlignment="Left" Margin="3,135,0,0" TextWrapping="Wrap" Text="за" VerticalAlignment="Top" Grid.Column="1"/>
 
-                    <DatePicker x:Name="Date" HorizontalAlignment="Left" Margin="5,135,0,0" VerticalAlignment="Top" Grid.Column="2" SelectedDateChanged="Date_SelectedDateChanged"/>
+
+                    <DatePicker SelectedDate="{Binding Date, Mode=TwoWay}" IsEnabled="{Binding IsEnabledDate}" Text="" HorizontalAlignment="Left" Margin="5,135,0,0" VerticalAlignment="Top" Grid.Column="2"/>
                     <TextBlock HorizontalAlignment="Left" Margin="3,160,0,0" TextWrapping="Wrap" Text="с" VerticalAlignment="Top" Grid.Column="1"/>
-                    <DatePicker x:Name="FromDate" HorizontalAlignment="Left" Margin="5,160,0,0" VerticalAlignment="Top" Grid.Column="2" SelectedDateChanged="FromDate_SelectedDateChanged"/>
+
+
+                    <DatePicker SelectedDate="{Binding FromDate, Mode=TwoWay}" IsEnabled="{Binding IsEnabledFromDate}" Text="" HorizontalAlignment="Left" Margin="5,160,0,0" VerticalAlignment="Top" Grid.Column="2"/>
 
                     <TextBlock HorizontalAlignment="Left" Margin="184,160,0,0" TextWrapping="Wrap" Text="по" VerticalAlignment="Top" Grid.Column="2"/>
-                    <DatePicker x:Name="ToDate" HorizontalAlignment="Left" Margin="213,160,0,0" VerticalAlignment="Top" Grid.Column="2" SelectedDateChanged="ToDate_SelectedDateChanged"/>
+
+
+                    <DatePicker SelectedDate="{Binding ToDate, Mode=TwoWay}" IsEnabled="{Binding IsEnabledToDate}" Text="" HorizontalAlignment="Left" Margin="213,160,0,0" VerticalAlignment="Top" Grid.Column="2" />
 
                     <TextBlock HorizontalAlignment="Left" Margin="3,187,0,0" TextWrapping="Wrap" Text="По городу" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
-                    <TextBox x:Name="City" HorizontalAlignment="Left" Margin="3,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <TextBox Text="{Binding City, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="3,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Grid.Column="1"/>
                     <TextBlock HorizontalAlignment="Left" Margin="3,235,0,0" TextWrapping="Wrap" Text="По стране" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
-                    <TextBox x:Name="Country" HorizontalAlignment="Left" Margin="3,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Grid.Column="1"/>
+                    <TextBox Text="{Binding Country, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="3,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2" Grid.Column="1"/>
                     <TextBlock HorizontalAlignment="Left" Margin="124,187,0,0" TextWrapping="Wrap" Text="По ФИО" VerticalAlignment="Top" Grid.Column="2"/>
                     <TextBlock HorizontalAlignment="Left" Margin="124,210,0,0" TextWrapping="Wrap" Text="Фамилия" VerticalAlignment="Top" Grid.Column="2"/>
                     <TextBlock HorizontalAlignment="Left" Margin="124,235,0,0" TextWrapping="Wrap" Text="Имя" VerticalAlignment="Top" Grid.Column="2"/>
                     <TextBlock HorizontalAlignment="Left" Margin="124,260,0,0" TextWrapping="Wrap" Text="Отчество" VerticalAlignment="Top" Grid.Column="2"/>
-                    <TextBox x:Name="LastName" HorizontalAlignment="Left" Margin="189,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
-                    <TextBox x:Name="FirstName" HorizontalAlignment="Left" Margin="189,235,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
-                    <TextBox x:Name="SurName" HorizontalAlignment="Left" Margin="189,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="189,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="189,235,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
+                    <TextBox Text="{Binding SurName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="189,260,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="2"/>
 
 
                 </Grid>
