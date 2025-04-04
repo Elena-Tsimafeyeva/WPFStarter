@@ -20,19 +20,17 @@ namespace WPFStarter
         /// Writing data to the database.
         /// E.A.T. 25-March-2025
         /// Adding asynchrony to data import.
+        /// E.A.T. 03-April-2025
+        /// Updated the use of asynchrony.
         ///</summary>
         public static async Task ImportCsv(string filePath)
         {
-            var records = new List<Person>();
             try
             {
-                await Task.Run(() =>
-                {
-                    ReadingData(records, filePath);
-                    RecordDatabase(records);
+                    var records = await ReadingData(filePath);
+                    await RecordDatabase(records);
                     MessageBox.Show("Успешно");
                     //OutputDataScreen(records);
-                });
             }
             catch (Exception ex)
             {
@@ -42,41 +40,50 @@ namespace WPFStarter
         ///<summary>
         /// E.A.T. 29-January-2025
         /// Reading data from a .csv file and transferring it to a list of objects.
+        /// E.A.T. 03-April-2025
+        /// Added asynchrony for reading from a .csv file.
         ///</summary>
-        public static void ReadingData(List<Person> records, string filePath)
+        public static async Task<List<Person>> ReadingData(string filePath)
         {
-            using TextFieldParser tfp = new(filePath);
+            return await Task.Run(() =>
             {
-                tfp.TextFieldType = FieldType.Delimited;
-                tfp.SetDelimiters(";");
-
-                while (!tfp.EndOfData)
+                var records = new List<Person>();
+                using TextFieldParser tfp = new(filePath);
                 {
-                    var values = tfp.ReadFields();
-                    var record = new Person
-                    {
-                        Date = DateTime.Parse(values[0]),
-                        FirstName = values[1],
-                        LastName = values[2],
-                        SurName = values[3],
-                        City = values[4],
-                        Country = values[5]
-                    };
+                    tfp.TextFieldType = FieldType.Delimited;
+                    tfp.SetDelimiters(";");
 
-                    records.Add(record);
+                    while (!tfp.EndOfData)
+                    {
+                        var values = tfp.ReadFields();
+                        var record = new Person
+                        {
+                            Date = DateTime.Parse(values[0]),
+                            FirstName = values[1],
+                            LastName = values[2],
+                            SurName = values[3],
+                            City = values[4],
+                            Country = values[5]
+                        };
+
+                        records.Add(record);
+                    }
                 }
-            }
+                return records;
+            });
         }
         ///<summary>
         /// E.A.T. 30-January-2025
         /// Record data to the database.
+        /// E.A.T. 03-April-2025
+        /// Added asynchrony for writing data to the database.
         ///</summary>
-        public static void RecordDatabase(List<Person> records)
+        public static async Task RecordDatabase(List<Person> records)
         {
             using var context = new ApplicationContext();
             {
-                context.Table_People.AddRange(records);
-                context.SaveChanges();
+               await context.Table_People.AddRangeAsync(records);
+               await context.SaveChangesAsync();
             }
         }
         ///<summary>
