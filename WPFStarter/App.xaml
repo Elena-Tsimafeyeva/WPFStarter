@@ -14,15 +14,72 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <!-- Theme setting -->
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <!-- 
             E.A.T. 24-March-2025
             Added style to the title. 
+            E.A.T. 4-April-2025
+            Updated the Title style.
             -->
             <DataTemplate x:Key="CustomWindowTitleTemplate">
-                <TextBlock Text="{Binding}" FontWeight="Bold" FontSize="18"/>
+                <TextBlock Text="{Binding}" Margin="0,5,0,0"  FontSize="20" FontFamily="Aptos"/>
             </DataTemplate>
+            <!--
+            E.A.T. 4-April-2025
+            Added styles for all elements.
+            -->
+            <Style TargetType="TabItem">
+                <Setter Property="FontFamily" Value="Aptos"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="HeaderTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" FontFamily="Aptos" FontSize="20" Height="28"/>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Height" Value="23"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="FontFamily" Value="Aptos"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Height" Value="23"/>
+            </Style>
+            <Style TargetType="DatePickerTextBox">
+                <Setter Property="FontFamily" Value="Aptos"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Height" Value="23"/>
+            </Style>
+            <Style TargetType="DatePicker">
+                <Setter Property="FontFamily" Value="Aptos"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Height" Value="28"/>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="FontFamily" Value="Aptos"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Height" Value="23"/>
+            </Style>
+            <Style TargetType="RadioButton">
+                <Setter Property="FontFamily" Value="Aptos"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Height" Value="23"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
