@@ -27,10 +27,10 @@ namespace WPFStarter
         {
             try
             {
-                    var records = await ReadingData(filePath);
-                    await RecordDatabase(records);
-                    MessageBox.Show("Успешно");
-                    //OutputDataScreen(records);
+                var records = await ReadingData(filePath);
+                await RecordDatabase(records);
+                MessageBox.Show("Успешно");
+                //OutputDataScreen(records);
             }
             catch (Exception ex)
             {
@@ -45,14 +45,14 @@ namespace WPFStarter
         ///</summary>
         public static async Task<List<Person>> ReadingData(string filePath)
         {
-            //return await Task.Run(async () =>
-            //{
+            return await Task.Run(() =>
+            {
                 var records = new List<Person>();
                 using TextFieldParser tfp = new(filePath);
                 {
+                   
                     tfp.TextFieldType = FieldType.Delimited;
                     tfp.SetDelimiters(";");
-                    await Task.Run(() => {
                     while (!tfp.EndOfData)
                     {
                         var values = tfp.ReadFields();
@@ -65,26 +65,34 @@ namespace WPFStarter
                             City = values[4],
                             Country = values[5]
                         };
-
                         records.Add(record);
                     }
-                    });
-            }
+                }
                 return records;
-            //});
+            });
         }
         ///<summary>
         /// E.A.T. 30-January-2025
         /// Record data to the database.
         /// E.A.T. 03-April-2025
         /// Added asynchrony for writing data to the database.
+        /// E.A.T. 07-April-2025
+        /// Splitting data package into parts.
         ///</summary>
         public static async Task RecordDatabase(List<Person> records)
         {
-            using var context = new ApplicationContext();
+            int packageSize = 10000;
+            int totalRecords = records.Count;
+
+            for (int i = 0; i < totalRecords; i += packageSize)
             {
-               await context.Table_People.AddRangeAsync(records);
-               await context.SaveChangesAsync();
+                var batch = records.Skip(i).Take(packageSize).ToList();
+
+                using (var context = new ApplicationContext())
+                {
+                    await context.Table_People.AddRangeAsync(batch);
+                    await context.SaveChangesAsync();
+                }
             }
         }
         ///<summary>

@@ -10,7 +10,7 @@ namespace WPFStarter.ProgramLogic
         /// E.A.T. 25-March-2025
         /// Adding asynchrony to data export.
         ///</summary>
-        public static async Task SortData(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, string? fileType, string? fileName)
+        public static async void SortData(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, string? fileType, string? fileName)
         {
             CheckingDate(date, fromDate, toDate, out bool outDate, out bool outFromDate, out bool outToDate);
             CheckingWord(firstName, out bool outFirstName);
@@ -26,8 +26,8 @@ namespace WPFStarter.ProgramLogic
             {
                 if (MessageBox.Show($"Вы хотите перенести данные?\nВаши данные:\nДата за {date}\nДата с {fromDate} по {toDate}\nГород {city}\nСтрана {country}\nФамилия {lastName}\nИмя {firstName}\nОтчество{surName}\nТип файла: {fileType}", "Перенос данных", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    Task.Run(() => { 
-                        ImportExport.ExportData(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry); 
+                    await Task.Run(() => { 
+                    ImportExport.ExportData(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry); 
                     });
                 }
                 else
@@ -168,7 +168,6 @@ namespace WPFStarter.ProgramLogic
         ///</summary>
         public static async Task<List<Person>> SortingDataForRecording(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
-            //ImportExport.ReadData(out List<Person> records);
             List<Person> records = await ImportExport.ReadData();
             var newRecords = new List<Person>();
             newRecords = records;
