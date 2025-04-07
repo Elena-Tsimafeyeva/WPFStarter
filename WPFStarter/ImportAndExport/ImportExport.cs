@@ -45,14 +45,14 @@ namespace WPFStarter
         ///</summary>
         public static async Task<List<Person>> ReadingData(string filePath)
         {
-            return await Task.Run(() =>
-            {
+            //return await Task.Run(async () =>
+            //{
                 var records = new List<Person>();
                 using TextFieldParser tfp = new(filePath);
                 {
                     tfp.TextFieldType = FieldType.Delimited;
                     tfp.SetDelimiters(";");
-
+                    await Task.Run(() => {
                     while (!tfp.EndOfData)
                     {
                         var values = tfp.ReadFields();
@@ -68,9 +68,10 @@ namespace WPFStarter
 
                         records.Add(record);
                     }
-                }
+                    });
+            }
                 return records;
-            });
+            //});
         }
         ///<summary>
         /// E.A.T. 30-January-2025
@@ -113,17 +114,17 @@ namespace WPFStarter
         /// E.A.T. 3-February-2025
         /// Outputting data from the DB to the list of objects.
         ///</summary>
-        public static void ReadData(out List<Person> records)
+        public static async Task<List<Person>> ReadData()
         {
-            records = new List<Person>();
+            var records = new List<Person>();
             string connectionString = "Server=localhost;Database=People;Trusted_Connection=True;TrustServerCertificate=True;";
             string query = "SELECT Id, Date, FirstName, LastName, SurName, City, Country FROM Table_People";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                await connection.OpenAsync();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
                 {
                     Person person = new Person
                     {
@@ -142,7 +143,7 @@ namespace WPFStarter
                 reader.Close();
                //MessageBox.Show("Данные из БД Записанны!");
             }
-
+            return records;
         }
         ///<summary>
         /// E.A.T. 10-February-2025
@@ -184,10 +185,9 @@ namespace WPFStarter
         /// E.A.T. 11-February-2025
         /// Data export.
         ///</summary>
-        public static void ExportData(string? fileName, string? typeFile, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
+        public static async void ExportData(string? fileName, string? typeFile, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
-            List<Person> records;
-            Program.SortingDataForRecording(out records,
+            List<Person> records = await Program.SortingDataForRecording(
                                     date,
                                     fromDate,
                                     toDate,
@@ -210,7 +210,7 @@ namespace WPFStarter
         /// E.A.T. 11-February-2025
         /// Data export to .xml.
         ///</summary>
-        public static void SaveXML(string fileName, List<Person> records)
+        public static async void SaveXML(string fileName, List<Person> records)
         {
             XElement testProgramElement = new XElement("TestProgram");
 
@@ -228,10 +228,10 @@ namespace WPFStarter
 
                 testProgramElement.Add(personElement);
             }
-
+            await Task.Run(() => {
             XDocument xdoc = new XDocument(testProgramElement);
             xdoc.Save($"{fileName}");
-
+            });
             MessageBox.Show("Data saved .XML");
 
         }
@@ -239,13 +239,13 @@ namespace WPFStarter
         /// E.A.T. 12-February-2025
         /// Data export to .csv.
         ///</summary>
-        public static void SaveCSV(string filePath, List<Person> records)
+        public static async void SaveCSV(string filePath, List<Person> records)
         {
             using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
             {
                 foreach (var person in records)
                 {
-                    writer.WriteLine($"{person.Id};{person.Date:yyyy-MM-dd};{person.FirstName};{person.LastName};{person.SurName};{person.City};{person.Country}");
+                    await Task.Run(() => { writer.WriteLine($"{person.Id};{person.Date:yyyy-MM-dd};{person.FirstName};{person.LastName};{person.SurName};{person.City};{person.Country}"); });
                 }
             }
             MessageBox.Show("Data saved .CSV");

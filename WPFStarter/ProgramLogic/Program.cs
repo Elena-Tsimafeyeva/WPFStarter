@@ -166,11 +166,11 @@ namespace WPFStarter.ProgramLogic
         /// E.A.T. 11-February-2025
         /// Sorting data for recording.
         ///</summary>
-        public static void SortingDataForRecording(out List<Person> newRecords, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
+        public static async Task<List<Person>> SortingDataForRecording(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
-            ImportExport.ReadData(out List<Person> records);
-
-            newRecords = new List<Person>();
+            //ImportExport.ReadData(out List<Person> records);
+            List<Person> records = await ImportExport.ReadData();
+            var newRecords = new List<Person>();
             newRecords = records;
             if (date != "" && outDate == true)
             {
@@ -223,7 +223,7 @@ namespace WPFStarter.ProgramLogic
                     .Where(person => person.Country == country)
                     .ToList();
             }
-
+            return newRecords;
         }
 
 
