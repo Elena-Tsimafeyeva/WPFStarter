@@ -278,7 +278,8 @@ namespace WPFStarter
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
                     if (saveFileDialog.ShowDialog() == true)
                     {
-                        string fileExport = saveFileDialog.FileName;
+                        if (ImportExport.isImportCsvRunning == false && ImportExport.isExportDataRunning == false){
+                            string fileExport = saveFileDialog.FileName;
                         FileExport = fileExport + selectedFileType;
 
                         string? date = "";
@@ -322,6 +323,15 @@ namespace WPFStarter
                             country = Country.ToString();
                         }
                         Program.SortData(date, fromDate, toDate, firstName, lastName, surName, city, country, selectedFileType, fileExport);
+                        }
+                        else if (ImportExport.isImportCsvRunning == true)
+                        {
+                            MessageBox.Show("Ожидайте.\nДанные ещё импортируются в БД.");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Ожидайте.\nДанные из БД ещё экспортируются.");
+                        }
                     }              
                 }
                 
@@ -364,13 +374,24 @@ namespace WPFStarter
         /// </summary>
         private void ImportCSV()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (ImportExport.isImportCsvRunning == false && ImportExport.isExportDataRunning == false)
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Text files (*.csv)|*.csv|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
                 string filePath = openFileDialog.FileName;
                 FileImport = filePath;
                 FileAvailability(filePath);
+            }
+            }
+            else if (ImportExport.isImportCsvRunning == true)
+            {
+                MessageBox.Show("Ожидайте.\nДанные ещё импортируются в БД.");
+            }
+            else
+            {
+                MessageBox.Show("Ожидайте.\nДанные из БД ещё экспортируются.");
             }
         }
         /// <summary>

@@ -14,6 +14,8 @@ namespace WPFStarter
     /// </summary>
     class ImportExport
     {
+        public static bool isImportCsvRunning = false;
+        public static bool isExportDataRunning = false;
         ///<summary>
         /// E.A.T. 25-December-2024
         /// Reading data from a .csv file and transferring it to a list of objects.
@@ -81,6 +83,7 @@ namespace WPFStarter
         ///</summary>
         public static async Task RecordDatabase(List<Person> records)
         {
+            isImportCsvRunning = true;
             int packageSize = 10000;
             int totalRecords = records.Count;
 
@@ -94,6 +97,7 @@ namespace WPFStarter
                     await context.SaveChangesAsync();
                 }
             }
+            isImportCsvRunning = false;
         }
         ///<summary>
         /// E.A.T. 30-January-2025
@@ -124,6 +128,7 @@ namespace WPFStarter
         ///</summary>
         public static async Task<List<Person>> ReadData()
         {
+            isExportDataRunning = true;
             var records = new List<Person>();
             string connectionString = "Server=localhost;Database=People;Trusted_Connection=True;TrustServerCertificate=True;";
             string query = "SELECT Id, Date, FirstName, LastName, SurName, City, Country FROM Table_People";
@@ -151,6 +156,7 @@ namespace WPFStarter
                 reader.Close();
                //MessageBox.Show("Данные из БД Записанны!");
             }
+            isExportDataRunning = false;
             return records;
         }
         ///<summary>
@@ -163,7 +169,7 @@ namespace WPFStarter
             if (fileName != "" || typeFile != "")
             {
                 fullFileName = $"{fileName}{typeFile}";
-                MessageBox.Show($"{fullFileName}");
+                //MessageBox.Show($"{fullFileName}");
                 FileAvailability(fullFileName, typeFile, records);
             }
         }
@@ -221,7 +227,6 @@ namespace WPFStarter
         public static async void SaveXML(string fileName, List<Person> records)
         {
             XElement testProgramElement = new XElement("TestProgram");
-
             foreach (var person in records)
             {
                 XElement personElement = new XElement("Record",
@@ -240,6 +245,7 @@ namespace WPFStarter
             XDocument xdoc = new XDocument(testProgramElement);
             xdoc.Save($"{fileName}");
             });
+            
             MessageBox.Show("Data saved .XML");
 
         }
@@ -256,6 +262,7 @@ namespace WPFStarter
                     await Task.Run(() => { writer.WriteLine($"{person.Id};{person.Date:yyyy-MM-dd};{person.FirstName};{person.LastName};{person.SurName};{person.City};{person.Country}"); });
                 }
             }
+           
             MessageBox.Show("Data saved .CSV");
 
         }
