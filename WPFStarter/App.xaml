@@ -80,6 +80,9 @@
                 <Setter Property="FontSize" Value="15"/>
                 <Setter Property="Height" Value="23"/>
             </Style>
+            <Style TargetType="ProgressBar">
+                <Setter Property="Height" Value="23"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

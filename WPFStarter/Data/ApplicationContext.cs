@@ -1,18 +1,56 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Windows;
+using System.IO;
 using WPFStarter.ProgramLogic;
+using System.Diagnostics;
 
 namespace WPFStarter
 {
     ///<summary>
     /// E.A.T. 28-January-2025
     /// Connecting the database.
+    /// E.A.T. 17-April-2025
+    /// If there is an error in the connection string, then an attempt to connect to the database using the data in the db.txt file.
     ///</summary>
     internal class ApplicationContext : DbContext
     {
-        public DbSet<Person> Table_People { get; set; }
+        public DbSet<Person> Table_People_Data { get; set; }
+        private static string GetConnectionString()
+        {
+            Debug.WriteLine("### Start of method GetConnectionString ###\n# Attempting to connect to the database. #");
+            string mainConnectionString = "Server=localhost;Database=Peopl;Trusted_Connection=True;TrustServerCertificate=True;";
+            try
+            {
+                using (var connection = new SqlConnection(mainConnectionString))
+                {
+                    connection.Open();
+                    connection.Close();
+                    return mainConnectionString;
+                }
+            }
+            catch
+            {
+                Debug.WriteLine("# If there is an error in the connection string, then an attempt to connect to the database using the data in the db.txt file. #");
+                string secondConnectionString = "Server=localhost;Database=Peopl;Trusted_Connection=True;TrustServerCertificate=True;";
+                try
+                { 
+                    string[] elements = File.ReadAllText("D:\\Лена\\Стажировка\\Изучение C# 12 и .NET 8\\3\\db.txt").Split(' ');
+                    string server = elements[0];
+                    string database = elements[1];
+                    secondConnectionString = $"Server={server};Database={database};Trusted_Connection=True;TrustServerCertificate=True;";
+                }
+                catch {
+                    Debug.WriteLine("# There is an error in the connection string. There is an error in the connection file or the data is missing. #");
+                }
+                Debug.WriteLine("### End of method GetConnectionString ###");
+                return secondConnectionString;
+            }
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=localhost;Database=People;Trusted_Connection=True;TrustServerCertificate=True;");
+            string connectionString = GetConnectionString();
+            optionsBuilder.UseSqlServer(connectionString);
         }
     }
 }

@@ -32,14 +32,18 @@
                             <TextBox IsReadOnly="True" Text="{Binding FileImport}" Margin="10,0,0,0" Width="600" Background="#FFE5E5E5" Foreground="#FF545454"/>
                             <Button Command="{Binding ImportCommand}" Content="Извлечь"  Margin="10,0,0,0"/>
                         </StackPanel>
+                        <StackPanel Margin="10">
+                            <ProgressBar Visibility="{Binding ElementVisibilityImport}" IsIndeterminate="{Binding IsWorkingImport}"/>
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
             </TabItem>
             <TabItem Header="Export">
                 <Grid Background="#FFE5E5E5">
                     <StackPanel Orientation="Vertical">
-                        <StackPanel HorizontalAlignment="Left" Margin="0,10,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                             <TextBlock Text="Экспорт данных из БД в файл .csv или .XML" Background="#FFC2D0D9"/>
+                            <ProgressBar Margin="10,0,10,0" Width="400" HorizontalAlignment="Center" Visibility="{Binding ElementVisibilityExport}" IsIndeterminate="{Binding IsWorkingExport}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                             <TextBlock TextWrapping="Wrap" Text="Имя файла" />

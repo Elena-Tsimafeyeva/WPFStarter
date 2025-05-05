@@ -1,0 +1,36 @@
+﻿<!--E.A.T. 15-April-2025 Window for entering data "server" and "database".-->
+<mah:MetroWindow x:Class="WPFStarter.WindowDataBase"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFStarter.ViewModel"
+        mc:Ignorable="d"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+        Title="WindowDataBase" Height="450" Width="800"
+        TitleTemplate="{StaticResource ResourceKey=CustomWindowTitleTemplate}"
+        Background="LightGray"
+        TitleCharacterCasing="Normal"
+        WindowTitleBrush="LightGray">
+    <!--E.A.T. 16-April-2025 Setting "ConnectingToDBViewModel" as the data source (DataContext) for a window in WPF.-->
+    <Window.DataContext>
+        <local:ConnectingToDBViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <!--E.A.T. 15-April-2025 Data entry fields "server" and "database". Reference information.-->
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text=" Server " HorizontalAlignment="Center" Width="55" Background="#80FFFFFF"/>
+                <TextBox Text="{Binding Server}" Width="250"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                <TextBlock Text=" Database " Width="55" Background="#80FFFFFF"/>
+                <TextBox Text="{Binding Database}" Width="250"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,5" HorizontalAlignment="Center">
+                <Button Command="{Binding ConnectingCommand}" Margin="5,0,0,0" Content="Готово"/>
+            </StackPanel>
+            <TextBlock Text="{Binding Explanation}" Width="Auto" Height="Auto" Foreground="DarkBlue"  Background="#80FFFFFF"/>
+        </StackPanel>
+    </Grid>
+</mah:MetroWindow>

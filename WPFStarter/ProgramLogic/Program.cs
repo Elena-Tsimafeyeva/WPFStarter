@@ -1,17 +1,21 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 namespace WPFStarter.ProgramLogic
 {
     internal class Program
     {
+
+        public static bool statusExport = true;
         ///<summary>
         /// E.A.T. 4-February-2025
         /// Validation of entered data for sorting. 
         /// E.A.T. 25-March-2025
         /// Adding asynchrony to data export.
         ///</summary>
-        public static async void SortData(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, string? fileType, string? fileName)
+        public static async void SortDataAsync(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, string? fileType, string? fileName)
         {
+            Debug.WriteLine("### Start of method SortDataAsync ###");
             CheckingDate(date, fromDate, toDate, out bool outDate, out bool outFromDate, out bool outToDate);
             CheckingWord(firstName, out bool outFirstName);
             CheckingWord(lastName, out bool outLastName);
@@ -20,6 +24,7 @@ namespace WPFStarter.ProgramLogic
             CheckingWord(country, out bool outCountry);
             if (date != "" && outDate == false || fromDate != "" && outFromDate == false || toDate != "" && outToDate == false || firstName != "" && outFirstName == false || lastName != "" && outLastName == false || surName != "" && outSurName == false || city != "" && outCity == false || country != "" && outCountry == false)
             {
+                statusExport = false;
                 MessageBox.Show("Исправьте данные!");
             }
             else
@@ -27,14 +32,16 @@ namespace WPFStarter.ProgramLogic
                 if (MessageBox.Show($"Вы хотите перенести данные?\nВаши данные:\nДата за {date}\nДата с {fromDate} по {toDate}\nГород {city}\nСтрана {country}\nФамилия {lastName}\nИмя {firstName}\nОтчество{surName}\nТип файла: {fileType}", "Перенос данных", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     await Task.Run(() => { 
-                    ImportExport.ExportData(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry); 
+                    ImportExport.ExportDataAsync(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry); 
                     });
                 }
                 else
                 {
+                    statusExport = false;
                     MessageBox.Show("Исправьте данные!");
                 }
             }
+            Debug.WriteLine("### End of method SortDataAsync ###");
         }
         ///<summary>
         /// E.A.T. 4-February-2025
@@ -42,6 +49,7 @@ namespace WPFStarter.ProgramLogic
         ///</summary>
         public static void SortDate(string? date, out bool outDate)
         {
+            Debug.WriteLine("### Start of method SortDate ###");
             outDate = true;
             if (date != null)
             {
@@ -59,6 +67,7 @@ namespace WPFStarter.ProgramLogic
                     outDate = false;
                 }
             }
+            Debug.WriteLine("### End of method SortDate ###");
         }
         ///<summary>
         /// E.A.T. 5-February-2025
@@ -66,6 +75,7 @@ namespace WPFStarter.ProgramLogic
         ///</summary>
         public static void CheckingDate(string? date, string? fromDate, string? toDate, out bool outDate, out bool outFromDate, out bool outToDate)
         {
+            Debug.WriteLine("### Start of method CheckingDate ###");
             outDate = false;
             outFromDate = false;
             outToDate = false;
@@ -106,6 +116,7 @@ namespace WPFStarter.ProgramLogic
                     }
                 }
             }
+            Debug.WriteLine("### End of method CheckingDate ###");
         }
         ///<summary>
         /// E.A.T. 7-February-2025
@@ -113,6 +124,7 @@ namespace WPFStarter.ProgramLogic
         ///</summary>
         public static void CheckingWord(string? word, out bool outWord)
         {
+            Debug.WriteLine("### Start of method CheckingWord ###");
             outWord = false;
             if (word != "")
             {
@@ -160,18 +172,23 @@ namespace WPFStarter.ProgramLogic
                 }
 
             }
+            Debug.WriteLine("### End of method CheckingWord ###");
         }
         
         ///<summary>
         /// E.A.T. 11-February-2025
         /// Sorting data for recording.
         ///</summary>
-        public static async Task<List<Person>> SortingDataForRecording(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
+        public static async Task<List<Person>> SortingDataForRecordingAsync(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
-            List<Person> records = await ImportExport.ReadData();
+            Debug.WriteLine("### Start of method SortingDataForRecordingAsync ###");
+            List<Person> records = await ImportExport.ReadDataAsync();
             var newRecords = new List<Person>();
             newRecords = records;
-            if (date != "" && outDate == true)
+
+            if (records.Count != 0 )
+            {
+                if (date != "" && outDate == true)
             {
                 DateTime parsedDate = DateTime.ParseExact(date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                 string stringParsedDate = parsedDate.ToString("yyyy-MM-dd");
@@ -222,9 +239,10 @@ namespace WPFStarter.ProgramLogic
                     .Where(person => person.Country == country)
                     .ToList();
             }
+            }
+            Debug.WriteLine("### End of method SortingDataForRecordingAsync ###");
             return newRecords;
+            
         }
-
-
     }
 }
