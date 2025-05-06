@@ -216,7 +216,7 @@ namespace WPFStarter
             catch (Exception ex) {
                 try
                 {
-                    string[] elements = File.ReadAllText("D:\\Лена\\Стажировка\\Изучение C# 12 и .NET 8\\3\\db.txt").Split(' ');
+                    string[] elements = File.ReadAllText("db.txt").Split(' ');
                     string server = elements[0];
                     string database = elements[1];
                     connectionString = $"Server={server};Database={database};Trusted_Connection=True;TrustServerCertificate=True;";
@@ -393,7 +393,7 @@ namespace WPFStarter
         public static async Task SaveServerDatabase(string server, string database)
         {
             Debug.WriteLine("### Start of method SaveServerDatabase ###");
-            await File.WriteAllTextAsync("D:\\Лена\\Стажировка\\Изучение C# 12 и .NET 8\\3\\db.txt", $"{server} {database}");
+            await File.WriteAllTextAsync("db.txt", $"{server} {database}");
             Debug.WriteLine("### End of method SaveServerDatabase ###");
         }
 

@@ -35,7 +35,7 @@ namespace WPFStarter
                 string secondConnectionString = "Server=localhost;Database=Peopl;Trusted_Connection=True;TrustServerCertificate=True;";
                 try
                 { 
-                    string[] elements = File.ReadAllText("D:\\Лена\\Стажировка\\Изучение C# 12 и .NET 8\\3\\db.txt").Split(' ');
+                    string[] elements = File.ReadAllText("db.txt").Split(' ');
                     string server = elements[0];
                     string database = elements[1];
                     secondConnectionString = $"Server={server};Database={database};Trusted_Connection=True;TrustServerCertificate=True;";

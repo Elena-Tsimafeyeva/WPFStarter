@@ -12,7 +12,7 @@ namespace WPFStarter.ViewModel
         /// </summary>
         private string server;
         private string database;
-        private string explanation = " Таблица в БД должна называаться Table_People_Data \n Данные в таблице: \n Id (int, null, Identity(Yes))\n Date (date, null)\n FirstName (nvarchar(50), null)\n LastName (nvarchar(50), null)\n SureName (nvarchar(50), null)\n City (nvarchar(50), null)\n Country (nvarchar(50), null)";
+        private string explanation = " Таблица в БД должна называться Table_People_Data \n Данные в таблице: \n Id (int, null, Identity(Yes))\n Date (date, null)\n FirstName (nvarchar(50), null)\n LastName (nvarchar(50), null)\n SureName (nvarchar(50), null)\n City (nvarchar(50), null)\n Country (nvarchar(50), null)";
         /// <summary>
         /// E.A.T. 14-April-2025
         /// Public property for accessing and changing the value of Server.
