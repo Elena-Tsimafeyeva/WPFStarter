@@ -6,9 +6,12 @@ using System.Text;
 using System.Windows;
 using System.Xml.Linq;
 using WPFStarter.ProgramLogic;
+using WPFStarter.Model;
+using WPFStarter.ViewModel;
+using WPFStarter.Data;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace WPFStarter
+namespace WPFStarter.ImportAndExport
 {
     /// <summary>
     /// E.A.T. 24-March-2025

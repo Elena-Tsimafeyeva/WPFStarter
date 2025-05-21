@@ -5,7 +5,7 @@
 /// E.A.T. 26-March-2025
 /// Updating the class to use the MVVM pattern.
 ///</summary>
-namespace WPFStarter.ProgramLogic
+namespace WPFStarter.Model
 {
     internal class Person : INotifyPropertyChanged
     {

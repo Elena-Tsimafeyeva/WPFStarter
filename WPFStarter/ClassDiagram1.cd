@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WPFStarter.ProgramLogic.Program">
+    <Position X="11.75" Y="5.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAAIAAAAAAAIAAAAAAEQAAAAAAA=</HashCode>
+      <FileName>ProgramLogic\Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WPFStarter.MainWindow">
+    <Position X="0.75" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>View\MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WPFStarter.WindowDataBase">
+    <Position X="0.75" Y="3" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>View\WindowDataBase.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WPFStarter.ViewModel.ConnectingToDBViewModel">
+    <Position X="3" Y="3" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAABAJIAAAAAAgAABAAAAAQAAAgAAEAI=</HashCode>
+      <FileName>ViewModel\ConnectingToDBViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WPFStarter.ViewModel.PersonViewModel">
+    <Position X="9" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AARBKEsAIAFBFAgKIgEECAlBhAIAQAAHAGUQDQAREkg=</HashCode>
+      <FileName>ViewModel\PersonViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WPFStarter.ViewModel.RelayCommand">
+    <Position X="0.75" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAQAAEAEAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModel\RelayCommand.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

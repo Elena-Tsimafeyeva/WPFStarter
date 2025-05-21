@@ -5,11 +5,11 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using WPFStarter.ProgramLogic;
-using WPFStarter.ViewModel;
+using WPFStarter.ImportAndExport;
 
-namespace WPFStarter
+namespace WPFStarter.ViewModel
 {
-    public class PersonViewModel : INotifyPropertyChanged
+    internal class PersonViewModel : INotifyPropertyChanged
     {
        
         /// <summary>

@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
+using WPFStarter.Model;
+using WPFStarter.ImportAndExport;
 namespace WPFStarter.ProgramLogic
 {
     internal class Program

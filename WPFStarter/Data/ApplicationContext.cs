@@ -4,8 +4,9 @@ using System.Windows;
 using System.IO;
 using WPFStarter.ProgramLogic;
 using System.Diagnostics;
+using WPFStarter.Model;
 
-namespace WPFStarter
+namespace WPFStarter.Data
 {
     ///<summary>
     /// E.A.T. 28-January-2025
