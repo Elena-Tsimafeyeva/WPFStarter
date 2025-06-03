@@ -77,11 +77,12 @@ namespace WPFStarter.ViewModel
             Debug.WriteLine("### Start of method ConnectingToDB ###");
             string? server = "";
             string? database = "";
-            if (Server != null && Database != null)
+            //if (Server != null && Database != null)
+            if(!string.IsNullOrEmpty(Server) && !string.IsNullOrEmpty(Database))
             {
                 server = Server.ToString();
                 database = Database.ToString();
-                ImportExport.SaveServerDatabase(server, database);
+                await ImportExport.SaveServerDatabase(server, database);
                 CloseSpecificWindow();
             }
             Debug.WriteLine("### End of method ConnectingToDB ###");

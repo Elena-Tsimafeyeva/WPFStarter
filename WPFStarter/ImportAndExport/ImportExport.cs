@@ -29,8 +29,8 @@ namespace WPFStarter.ImportAndExport
         /// E.A.T. 21-April-2025
         /// Added "windowDB" to enable and disable the window for entering "server" and "database" data.
         /// </summary>
-        public static bool isImportCsvRunning = false;
-        public static bool isExportDataRunning = false;
+        public static bool importRunning = false;
+        public static bool exportRunning = false;
         public static bool statusImport = true;
         public static bool statusExport = true;
         public static bool windowDB = false;
@@ -51,7 +51,7 @@ namespace WPFStarter.ImportAndExport
             try
             {
                 var records = await ReadingDataAsync(filePath);
-                await RecordDatabaseAsync(records);
+                await RecordDBAsync(records);
                 statusImport = false;
             }
             catch (Exception ex)
@@ -109,7 +109,7 @@ namespace WPFStarter.ImportAndExport
         /// E.A.T. 02-May-2025
         /// Writing data to a DB table using asynchronous streams.
         ///</summary>
-        public static async Task RecordDatabaseAsync(List<Person> records)
+        public static async Task RecordDBAsync(List<Person> records)
         {
             Debug.WriteLine("### Start of method RecordDatabaseAsync ###");
             await Task.Run(async () => {
@@ -123,20 +123,20 @@ namespace WPFStarter.ImportAndExport
                         }
                         else
                         {
-                            isImportCsvRunning = true;
+                            importRunning = true;
                             await foreach (var batch in GetDataAsync(records, 1000))
                             {
                                 context.Table_People_Data.AddRange(batch);
                                 context.SaveChanges();
                             }
-                            isImportCsvRunning = false;
+                            importRunning = false;
                             MessageBox.Show("Успешно!");
                         }
                     }
                     catch (Exception ex)
                     {
                         statusImport = false;
-                        isImportCsvRunning = false;
+                        importRunning = false;
                         windowDB = true;
                         Debug.WriteLine($"Ошибка подключения: {ex.Message}");
                         MessageBox.Show($"Ошибка подключения: {ex.Message}");
@@ -207,14 +207,14 @@ namespace WPFStarter.ImportAndExport
         public static async Task<List<Person>> ReadDataAsync()
         {
             Debug.WriteLine("### Start of method ReadDataAsync ###");
-            isExportDataRunning = true;
+            exportRunning = true;
             var records = new List<Person>();
             string connectionString = "Server=localhost;Database=Peopl;Trusted_Connection=True;TrustServerCertificate=True;";
             string query = "SELECT Id, Date, FirstName, LastName, SurName, City, Country FROM Table_People_Data";
             try
             {
                 records = await ListPersonAsync(connectionString, query);
-                isExportDataRunning = false;
+                exportRunning = false;
             }
             catch (Exception ex) {
                 try
@@ -224,11 +224,11 @@ namespace WPFStarter.ImportAndExport
                     string database = elements[1];
                     connectionString = $"Server={server};Database={database};Trusted_Connection=True;TrustServerCertificate=True;";
                     records = await ListPersonAsync(connectionString, query);
-                    isExportDataRunning = false;
+                    exportRunning = false;
                 }
                 catch{
                     statusExport = false;
-                    isExportDataRunning = false;
+                    exportRunning = false;
                     windowDB = true;
                     Debug.WriteLine($"Ошибка подключения: {ex.Message}");
                     MessageBox.Show($"Ошибка подключения: {ex.Message}");
@@ -279,7 +279,8 @@ namespace WPFStarter.ImportAndExport
         {
             Debug.WriteLine("### Start of method CreateFile ###");
             fullFileName = null;
-            if (fileName != "" || typeFile != "")
+            //if (fileName != "" || typeFile != "")
+            if (!string.IsNullOrEmpty(fileName) || !string.IsNullOrEmpty(typeFile))
             {
                 fullFileName = $"{fileName}{typeFile}";
                 FileAvailability(fullFileName, typeFile, records);

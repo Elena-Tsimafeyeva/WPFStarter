@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows;
 using WPFStarter.Model;
 using WPFStarter.ImportAndExport;
+using Microsoft.IdentityModel.Tokens;
 namespace WPFStarter.ProgramLogic
 {
     internal class Program
@@ -24,7 +25,8 @@ namespace WPFStarter.ProgramLogic
             CheckingWord(surName, out bool outSurName);
             CheckingWord(city, out bool outCity);
             CheckingWord(country, out bool outCountry);
-            if (date != "" && outDate == false || fromDate != "" && outFromDate == false || toDate != "" && outToDate == false || firstName != "" && outFirstName == false || lastName != "" && outLastName == false || surName != "" && outSurName == false || city != "" && outCity == false || country != "" && outCountry == false)
+            //if (date != "" && outDate == false || fromDate != "" && outFromDate == false || toDate != "" && outToDate == false || firstName != "" && outFirstName == false || lastName != "" && outLastName == false || surName != "" && outSurName == false || city != "" && outCity == false || country != "" && outCountry == false)
+            if(!string.IsNullOrEmpty(date) && outDate == false || !string.IsNullOrEmpty(fromDate) && outFromDate == false || !string.IsNullOrEmpty(toDate) && outToDate == false || !string.IsNullOrEmpty(firstName) && outFirstName == false || !string.IsNullOrEmpty(lastName) && outLastName == false || !string.IsNullOrEmpty(surName) && outSurName == false || !string.IsNullOrEmpty(city) && outCity == false || !string.IsNullOrEmpty(country) && outCountry == false)
             {
                 statusExport = false;
                 MessageBox.Show("Исправьте данные!");
@@ -53,11 +55,11 @@ namespace WPFStarter.ProgramLogic
         {
             Debug.WriteLine("### Start of method SortDate ###");
             outDate = true;
-            if (date != null)
+            //if (date != null)
+            if(!string.IsNullOrEmpty(date))
             {
                 try
                 {
-
                     DateTime parsedDate = DateTime.ParseExact(date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     string stringParsedDate = parsedDate.ToString("yyyy-MM-dd");
                     DateTime dateFormat = DateTime.ParseExact(stringParsedDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -81,23 +83,27 @@ namespace WPFStarter.ProgramLogic
             outDate = false;
             outFromDate = false;
             outToDate = false;
-            if (date != "" && fromDate != "" || date != "" && toDate != "")
+            //if (date != "" && fromDate != "" || date != "" && toDate != "")
+            if(!string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(fromDate) || !string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(toDate))
             {
                 MessageBox.Show("Вы можете использовать даты для сортировки или 'ЗА Год-Месяц-День' или 'С Год-Месяц-День ПО Год-Месяц-День'.");
             }
-            else if (date == "" && fromDate != "" && toDate == "" || date == "" && fromDate == "" && toDate != "")
+            //else if (date == "" && fromDate != "" && toDate == "" || date == "" && fromDate == "" && toDate != "")
+            else if(string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(fromDate) && string.IsNullOrEmpty(toDate) || string.IsNullOrEmpty(date) && string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
             {
                 MessageBox.Show("Чтобы использовать даты для сортировки 'С Год-Месяц-День ПО Год-Месяц-День',\n Вы должны заполнить оба поля.");
             }
-            else if (date != "" && fromDate == "" && toDate == "")
+            //else if (date != "" && fromDate == "" && toDate == "")
+            else if(!string.IsNullOrEmpty(date) && string.IsNullOrEmpty(fromDate) && string.IsNullOrEmpty(toDate))
             {
                 SortDate(date, out outDate);
             }
-            else if (date == "" && fromDate != "" && toDate != "")
+            //else if (date == "" && fromDate != "" && toDate != "")
+            else if(string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
             {
                 SortDate(fromDate, out outFromDate);
                 SortDate(toDate, out outToDate);
-                if (outFromDate == true && outToDate == true)
+                if (outFromDate && outToDate)
                 {
                     DateTime parsedFromDate = DateTime.ParseExact(fromDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     string stringParsedFromDate = parsedFromDate.ToString("yyyy-MM-dd");
@@ -128,7 +134,8 @@ namespace WPFStarter.ProgramLogic
         {
             Debug.WriteLine("### Start of method CheckingWord ###");
             outWord = false;
-            if (word != "")
+            //if (word != "")
+            if(!string.IsNullOrEmpty(word))
             {
                 int lengthWord = word.Length;
                 string capitalLetters = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
@@ -190,7 +197,8 @@ namespace WPFStarter.ProgramLogic
 
             if (records.Count != 0 )
             {
-                if (date != "" && outDate == true)
+                //if (date != "" && outDate == true)
+                if(!string.IsNullOrEmpty(date) && outDate)
             {
                 DateTime parsedDate = DateTime.ParseExact(date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                 string stringParsedDate = parsedDate.ToString("yyyy-MM-dd");
@@ -199,7 +207,8 @@ namespace WPFStarter.ProgramLogic
                     .Where(person => person.Date == dateFormat)
                     .ToList();
             }
-            else if (fromDate != "" && outFromDate == true && toDate != "" && outToDate == true)
+            //else if (fromDate != "" && outFromDate == true && toDate != "" && outToDate == true)
+            else if (!string.IsNullOrEmpty(fromDate) && outFromDate && !string.IsNullOrEmpty(toDate) && outToDate)
             {
                 DateTime parsedFromDate = DateTime.ParseExact(fromDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                 string stringParsedFromDate = parsedFromDate.ToString("yyyy-MM-dd");
@@ -211,31 +220,36 @@ namespace WPFStarter.ProgramLogic
                     .Where(person => person.Date >= fromDateFormat && person.Date <= toDateFormat)
                     .ToList();
             }
-            if (firstName != "" && outFirstName == true)
+            //if (firstName != "" && outFirstName == true)
+            if(!string.IsNullOrEmpty(firstName) && outFirstName)
             {
                 newRecords = records
                     .Where(person => person.FirstName == firstName)
                     .ToList();
             }
-            if (lastName != "" && outLastName == true)
+            //if (lastName != "" && outLastName == true)
+            if(!string.IsNullOrEmpty (lastName) && outLastName)
             {
                 newRecords = records
                     .Where(person => person.LastName == lastName)
                     .ToList();
             }
-            if (surName != "" && outSurName == true)
+            //if (surName != "" && outSurName == true)
+            if(!string.IsNullOrEmpty(surName) && outSurName)
             {
                 newRecords = records
                     .Where(person => person.SurName == surName)
                     .ToList();
             }
-            if (city != "" && outCity == true)
+            //if (city != "" && outCity == true)
+            if(!string.IsNullOrEmpty(city) && outCity)
             {
                 newRecords = records
                     .Where(person => person.City == city)
                     .ToList();
             }
-            if (country != "" && outCountry == true)
+            //if (country != "" && outCountry == true)
+            if (!string.IsNullOrEmpty(country) && outCountry)
             {
                 newRecords = records
                     .Where(person => person.Country == country)
