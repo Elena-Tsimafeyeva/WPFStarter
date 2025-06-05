@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using WPFStarter.Model;
 using WPFStarter.ImportAndExport;
-using Microsoft.IdentityModel.Tokens;
+using System.IO;
 namespace WPFStarter.ProgramLogic
 {
     internal class Program
@@ -25,7 +25,6 @@ namespace WPFStarter.ProgramLogic
             CheckingWord(surName, out bool outSurName);
             CheckingWord(city, out bool outCity);
             CheckingWord(country, out bool outCountry);
-            //if (date != "" && outDate == false || fromDate != "" && outFromDate == false || toDate != "" && outToDate == false || firstName != "" && outFirstName == false || lastName != "" && outLastName == false || surName != "" && outSurName == false || city != "" && outCity == false || country != "" && outCountry == false)
             if(!string.IsNullOrEmpty(date) && outDate == false || !string.IsNullOrEmpty(fromDate) && outFromDate == false || !string.IsNullOrEmpty(toDate) && outToDate == false || !string.IsNullOrEmpty(firstName) && outFirstName == false || !string.IsNullOrEmpty(lastName) && outLastName == false || !string.IsNullOrEmpty(surName) && outSurName == false || !string.IsNullOrEmpty(city) && outCity == false || !string.IsNullOrEmpty(country) && outCountry == false)
             {
                 statusExport = false;
@@ -36,7 +35,7 @@ namespace WPFStarter.ProgramLogic
                 if (MessageBox.Show($"Вы хотите перенести данные?\nВаши данные:\nДата за {date}\nДата с {fromDate} по {toDate}\nГород {city}\nСтрана {country}\nФамилия {lastName}\nИмя {firstName}\nОтчество{surName}\nТип файла: {fileType}", "Перенос данных", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     await Task.Run(() => { 
-                    ImportExport.ExportDataAsync(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry); 
+                    SortingData.ExportDataAsync(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry); 
                     });
                 }
                 else
@@ -55,7 +54,6 @@ namespace WPFStarter.ProgramLogic
         {
             Debug.WriteLine("### Start of method SortDate ###");
             outDate = true;
-            //if (date != null)
             if(!string.IsNullOrEmpty(date))
             {
                 try
@@ -83,22 +81,18 @@ namespace WPFStarter.ProgramLogic
             outDate = false;
             outFromDate = false;
             outToDate = false;
-            //if (date != "" && fromDate != "" || date != "" && toDate != "")
             if(!string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(fromDate) || !string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(toDate))
             {
                 MessageBox.Show("Вы можете использовать даты для сортировки или 'ЗА Год-Месяц-День' или 'С Год-Месяц-День ПО Год-Месяц-День'.");
             }
-            //else if (date == "" && fromDate != "" && toDate == "" || date == "" && fromDate == "" && toDate != "")
             else if(string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(fromDate) && string.IsNullOrEmpty(toDate) || string.IsNullOrEmpty(date) && string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
             {
                 MessageBox.Show("Чтобы использовать даты для сортировки 'С Год-Месяц-День ПО Год-Месяц-День',\n Вы должны заполнить оба поля.");
             }
-            //else if (date != "" && fromDate == "" && toDate == "")
             else if(!string.IsNullOrEmpty(date) && string.IsNullOrEmpty(fromDate) && string.IsNullOrEmpty(toDate))
             {
                 SortDate(date, out outDate);
             }
-            //else if (date == "" && fromDate != "" && toDate != "")
             else if(string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
             {
                 SortDate(fromDate, out outFromDate);
@@ -134,7 +128,6 @@ namespace WPFStarter.ProgramLogic
         {
             Debug.WriteLine("### Start of method CheckingWord ###");
             outWord = false;
-            //if (word != "")
             if(!string.IsNullOrEmpty(word))
             {
                 int lengthWord = word.Length;
@@ -191,13 +184,12 @@ namespace WPFStarter.ProgramLogic
         public static async Task<List<Person>> SortingDataForRecordingAsync(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
             Debug.WriteLine("### Start of method SortingDataForRecordingAsync ###");
-            List<Person> records = await ImportExport.ReadDataAsync();
+            List<Person> records = await DatabaseReader.ReadDataAsync();
             var newRecords = new List<Person>();
             newRecords = records;
 
             if (records.Count != 0 )
             {
-                //if (date != "" && outDate == true)
                 if(!string.IsNullOrEmpty(date) && outDate)
             {
                 DateTime parsedDate = DateTime.ParseExact(date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
@@ -207,7 +199,6 @@ namespace WPFStarter.ProgramLogic
                     .Where(person => person.Date == dateFormat)
                     .ToList();
             }
-            //else if (fromDate != "" && outFromDate == true && toDate != "" && outToDate == true)
             else if (!string.IsNullOrEmpty(fromDate) && outFromDate && !string.IsNullOrEmpty(toDate) && outToDate)
             {
                 DateTime parsedFromDate = DateTime.ParseExact(fromDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
@@ -220,35 +211,30 @@ namespace WPFStarter.ProgramLogic
                     .Where(person => person.Date >= fromDateFormat && person.Date <= toDateFormat)
                     .ToList();
             }
-            //if (firstName != "" && outFirstName == true)
             if(!string.IsNullOrEmpty(firstName) && outFirstName)
             {
                 newRecords = records
                     .Where(person => person.FirstName == firstName)
                     .ToList();
             }
-            //if (lastName != "" && outLastName == true)
             if(!string.IsNullOrEmpty (lastName) && outLastName)
             {
                 newRecords = records
                     .Where(person => person.LastName == lastName)
                     .ToList();
             }
-            //if (surName != "" && outSurName == true)
             if(!string.IsNullOrEmpty(surName) && outSurName)
             {
                 newRecords = records
                     .Where(person => person.SurName == surName)
                     .ToList();
             }
-            //if (city != "" && outCity == true)
             if(!string.IsNullOrEmpty(city) && outCity)
             {
                 newRecords = records
                     .Where(person => person.City == city)
                     .ToList();
             }
-            //if (country != "" && outCountry == true)
             if (!string.IsNullOrEmpty(country) && outCountry)
             {
                 newRecords = records
@@ -259,6 +245,16 @@ namespace WPFStarter.ProgramLogic
             Debug.WriteLine("### End of method SortingDataForRecordingAsync ###");
             return newRecords;
             
+        }
+        ///<summary>
+        /// E.A.T. 16-April-2025
+        /// Asynchronous writing of "server" and "database" data.
+        ///</summary>
+        public static async Task SaveServerDatabase(string server, string database)
+        {
+            Debug.WriteLine("### Start of method SaveServerDatabase ###");
+            await File.WriteAllTextAsync("db.txt", $"{server} {database}");
+            Debug.WriteLine("### End of method SaveServerDatabase ###");
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using ControlzEx.Standard;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
@@ -341,19 +340,13 @@ namespace WPFStarter.ViewModel
             try
             {
                 string? selectedFileType = null;
-                //if (typeCSV == true){
-                //    selectedFileType = ".csv";
-                //}else if (typeXML == true){
-                //    selectedFileType = ".xml";
-                //}
                 selectedFileType = typeCSV ? ".csv" : typeXML ? ".xml" : null;
-                //if (selectedFileType != null)
                 if (!string.IsNullOrEmpty(selectedFileType))
                 {
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
                     if (saveFileDialog.ShowDialog() == true)
                     {
-                        if (ImportExport.importRunning == false && ImportExport.exportRunning == false){
+                        if (ImportState.importRunning == false && ExportState.exportRunning == false){
 
                             StatusWorkExport(true);
                             string fileExport = saveFileDialog.FileName;
@@ -366,49 +359,41 @@ namespace WPFStarter.ViewModel
                             string? surName = "";
                             string? city = "";
                             string? country = "";
-                            //if (Date.ToString() != "")
                             if(!string.IsNullOrEmpty(Date.ToString()))
                             {
                                 date = Date.ToString().Substring(0, 10);
                             }
-                            //if (FromDate.ToString() != "")
                             if (!string.IsNullOrEmpty(FromDate.ToString()))
                             {
                                 fromDate = FromDate.ToString().Substring(0, 10);
                             }
-                            //if (ToDate.ToString() != "")
                             if (!string.IsNullOrEmpty(ToDate.ToString()))
                             {
                                 toDate = ToDate.ToString().Substring(0, 10);
                             }
-                            //if (FirstName != null)
                             if (!string.IsNullOrEmpty(FirstName))
                             {
                                 firstName = FirstName.ToString();
                             }
-                            //if (LastName != null)
                             if (!string.IsNullOrEmpty(LastName))
                             {
                                 lastName = LastName.ToString();
                             }
-                            //if (SurName != null)
                             if (!string.IsNullOrEmpty(SurName))
                             {
                                 surName = SurName.ToString();
                             }
-                            //if (City != null)
                             if (!string.IsNullOrEmpty(City))
                             {
                                 city = City.ToString();
                             }
-                            //if (Country != null)
                             if (!string.IsNullOrEmpty(Country))
                             {
                                 country = Country.ToString();
                             }
                             Program.SortDataAsync(date, fromDate, toDate, firstName, lastName, surName, city, country, selectedFileType, fileExport);
                             }
-                            else if (ImportExport.importRunning)
+                            else if (ImportState.importRunning)
                             {
                                 MessageBox.Show("Ожидайте.\nДанные ещё импортируются в БД.");
                             }
@@ -416,12 +401,12 @@ namespace WPFStarter.ViewModel
                             {
                                 MessageBox.Show("Ожидайте.\nДанные из БД ещё экспортируются.");
                             }
-                            while (ImportExport.statusExport&&Program.statusExport)
+                            while (ExportState.statusExport&&Program.statusExport)
                             {
                                 await Task.Delay(100);
                             }
                             StatusWorkExport(false);
-                            if (ImportExport.windowDB)
+                            if (ImportState.windowDB || ExportState.windowDB)
                             {
                                 OpenWindowDatabase();
                             }
@@ -451,13 +436,11 @@ namespace WPFStarter.ViewModel
         private void IsEnabledDates()
         {
             Debug.WriteLine("### Start of method IsEnabledDates ###");
-            //if (Date.ToString() != "")
             if (!string.IsNullOrEmpty(Date.ToString()))
             {
                 IsEnabledFromDate = false;
                 IsEnabledToDate = false;
             }
-            //else if (FromDate.ToString() != "" || ToDate.ToString() != "")
             else if (!string.IsNullOrEmpty(FromDate.ToString()) || !string.IsNullOrEmpty(ToDate.ToString()))
             {
                 IsEnabledDate = false;
@@ -482,7 +465,7 @@ namespace WPFStarter.ViewModel
         private void ImportCSV()
         {
             Debug.WriteLine("### Start of method ImportCSV ###");
-            if (ImportExport.importRunning == false && ImportExport.exportRunning == false)
+            if (ImportState.importRunning == false && ExportState.exportRunning == false)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.Filter = "Text files (*.csv)|*.csv|All files (*.*)|*.*";
@@ -494,7 +477,7 @@ namespace WPFStarter.ViewModel
                 FileAvailability(filePath);
             }
             }
-            else if (ImportExport.importRunning)
+            else if (ImportState.importRunning)
             {
                 MessageBox.Show("Ожидайте.\nДанные ещё импортируются в БД.");
             }
@@ -518,13 +501,13 @@ namespace WPFStarter.ViewModel
             Debug.WriteLine("### Start of method FileAvailability ###");
             if (System.IO.File.Exists(filePath))
             {
-                ImportExport.ImportCsvAsync(filePath);
-                while (ImportExport.statusImport)
+                await ImportData.ImportCsvAsync(filePath);
+                while (ImportState.statusImport)
                 {
                     await Task.Delay(100);
                 }
                 StatusWorkImport(false);
-                if (ImportExport.windowDB)
+                if (ImportState.windowDB || ExportState.windowDB)
                 {
                     OpenWindowDatabase();
                 }

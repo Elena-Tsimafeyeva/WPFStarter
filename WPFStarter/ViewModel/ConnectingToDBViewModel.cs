@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
-using WPFStarter.ImportAndExport;
+using WPFStarter.ProgramLogic;
 namespace WPFStarter.ViewModel
 {
     internal class ConnectingToDBViewModel : INotifyPropertyChanged
@@ -77,12 +77,11 @@ namespace WPFStarter.ViewModel
             Debug.WriteLine("### Start of method ConnectingToDB ###");
             string? server = "";
             string? database = "";
-            //if (Server != null && Database != null)
             if(!string.IsNullOrEmpty(Server) && !string.IsNullOrEmpty(Database))
             {
                 server = Server.ToString();
                 database = Database.ToString();
-                await ImportExport.SaveServerDatabase(server, database);
+                await Program.SaveServerDatabase(server, database);
                 CloseSpecificWindow();
             }
             Debug.WriteLine("### End of method ConnectingToDB ###");

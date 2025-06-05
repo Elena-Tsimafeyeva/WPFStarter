@@ -20,7 +20,7 @@ namespace WPFStarter.Data
         private static string GetConnectionString()
         {
             Debug.WriteLine("### Start of method GetConnectionString ###\n# Attempting to connect to the database. #");
-            string mainConnectionString = "Server=localhost;Database=Peopl;Trusted_Connection=True;TrustServerCertificate=True;";
+            string mainConnectionString = "Server=localhost;Database=People;Trusted_Connection=True;TrustServerCertificate=True;";
             try
             {
                 using (var connection = new SqlConnection(mainConnectionString))
@@ -33,7 +33,7 @@ namespace WPFStarter.Data
             catch
             {
                 Debug.WriteLine("# If there is an error in the connection string, then an attempt to connect to the database using the data in the db.txt file. #");
-                string secondConnectionString = "Server=localhost;Database=Peopl;Trusted_Connection=True;TrustServerCertificate=True;";
+                string secondConnectionString = "Server=localhost;Database=People;Trusted_Connection=True;TrustServerCertificate=True;";
                 try
                 { 
                     string[] elements = File.ReadAllText("db.txt").Split(' ');
