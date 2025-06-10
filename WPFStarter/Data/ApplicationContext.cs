@@ -11,8 +11,6 @@ namespace WPFStarter.Data
     ///<summary>
     /// E.A.T. 28-January-2025
     /// Connecting the database.
-    /// E.A.T. 17-April-2025
-    /// If there is an error in the connection string, then an attempt to connect to the database using the data in the db.txt file.
     ///</summary>
     internal class ApplicationContext : DbContext
     {

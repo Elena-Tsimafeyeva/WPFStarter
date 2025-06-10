@@ -24,8 +24,6 @@ namespace WPFStarter.ImportAndExport
         ///<summary>
         /// E.A.T. 29-January-2025
         /// Reading data from a .csv file and transferring it to a list of objects.
-        /// E.A.T. 03-April-2025
-        /// Added asynchrony for reading from a .csv file.
         ///</summary>
         public static async IAsyncEnumerable<List<Person>> ReadingDataAsync(string filePath, int batchSize)
         {
@@ -66,14 +64,6 @@ namespace WPFStarter.ImportAndExport
         ///<summary>
         /// E.A.T. 30-January-2025
         /// Record data to the database.
-        /// E.A.T. 03-April-2025
-        /// Added asynchrony for writing data to the database.
-        /// E.A.T. 07-April-2025
-        /// Splitting data package into parts.
-        /// E.A.T. 17-April-2025
-        /// Checking connection to the database.
-        /// E.A.T. 02-May-2025
-        /// Writing data to a DB table using asynchronous streams.
         ///</summary>
         public static async Task RecordDBAsync(List<Person> records)
         {
@@ -143,10 +133,6 @@ namespace WPFStarter.ImportAndExport
         /// E.A.T. 25-December-2024
         /// Reading data from a .csv file and transferring it to a list of objects.
         /// Writing data to the database.
-        /// E.A.T. 25-March-2025
-        /// Adding asynchrony to data import.
-        /// E.A.T. 03-April-2025
-        /// Updated the use of asynchrony.
         ///</summary>
         public static async Task ImportCsvAsync(string filePath)
         {

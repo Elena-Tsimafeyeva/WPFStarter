@@ -13,8 +13,6 @@ namespace WPFStarter.ProgramLogic
         ///<summary>
         /// E.A.T. 4-February-2025
         /// Validation of entered data for sorting. 
-        /// E.A.T. 25-March-2025
-        /// Adding asynchrony to data export.
         ///</summary>
         public static async void SortDataAsync(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, string? fileType, string? fileName)
         {
@@ -34,9 +32,10 @@ namespace WPFStarter.ProgramLogic
             {
                 if (MessageBox.Show($"Вы хотите перенести данные?\nВаши данные:\nДата за {date}\nДата с {fromDate} по {toDate}\nГород {city}\nСтрана {country}\nФамилия {lastName}\nИмя {firstName}\nОтчество{surName}\nТип файла: {fileType}", "Перенос данных", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    await Task.Run(() => { 
-                    SortingData.ExportDataAsync(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry); 
-                    });
+                    //await Task.Run(() => {
+                        //SortingData.ExportDataAsync(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry); 
+                        await FileExporter.CreateFile(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
+                    //});
                 }
                 else
                 {
@@ -181,10 +180,9 @@ namespace WPFStarter.ProgramLogic
         /// E.A.T. 11-February-2025
         /// Sorting data for recording.
         ///</summary>
-        public static async Task<List<Person>> SortingDataForRecordingAsync(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
+        public static async Task<List<Person>> SortingDataForRecordingAsync(List<Person> records, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
             Debug.WriteLine("### Start of method SortingDataForRecordingAsync ###");
-            List<Person> records = await DatabaseReader.ReadDataAsync();
             var newRecords = new List<Person>();
             newRecords = records;
 

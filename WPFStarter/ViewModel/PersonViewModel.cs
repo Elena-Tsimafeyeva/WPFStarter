@@ -323,16 +323,6 @@ namespace WPFStarter.ViewModel
         /// <summary>
         /// E.A.T. 20-January-2025
         /// Button event handler for export.
-        /// E.A.T. 4-February-2025
-        /// Checking the entered data.
-        /// E.A.T. 28-March-2025
-        /// Moved the method to the PersonViewModels class.
-        /// Fixed the method to work correctly with the MVVM pattern.
-        /// Added check for file type selection.
-        /// E.A.T. 21-April-2025
-        /// Open a window to enter the "server" and "database" data if necessary.
-        /// E.A.T. 25-April-2025
-        /// Enable and disable progressbar during export.
         /// </summary>
         private async void ExportData()
         {
@@ -456,11 +446,6 @@ namespace WPFStarter.ViewModel
         /// <summary>
         /// E.A.T. 20-January-2025
         /// Button event handler for import.
-        /// E.A.T. 28-March-2025
-        /// Moved the method to the PersonViewModels class.
-        /// Fixed the method to work correctly with the MVVM pattern.
-        /// E.A.T. 23-April-2025
-        /// Enable progressbar during export.
         /// </summary>
         private void ImportCSV()
         {
@@ -490,11 +475,6 @@ namespace WPFStarter.ViewModel
         /// <summary>
         /// E.A.T. 22-January-2025
         /// Checking for file availability (for import).
-        /// E.A.T. 27-March-2025
-        /// Moved the method to the PersonViewModels class.
-        /// Fixed the method to work correctly with the MVVM pattern.
-        /// E.A.T. 23-April-2025
-        /// Disable progressbar after export.
         /// </summary>
         public async void FileAvailability(string filePath)
         {

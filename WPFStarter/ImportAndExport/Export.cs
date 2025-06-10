@@ -6,6 +6,8 @@ using System.Windows;
 using System.Xml.Linq;
 using WPFStarter.ProgramLogic;
 using WPFStarter.Model;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Diagnostics.Metrics;
 
 namespace WPFStarter.ImportAndExport
 {
@@ -27,22 +29,16 @@ namespace WPFStarter.ImportAndExport
         ///<summary>
         /// E.A.T. 3-February-2025
         /// Outputting data from the DB to the list of objects.
-        /// E.A.T. 18-April-2025
-        /// Adding error handling if the database connection string is incorrect.
         ///</summary>
-        public static async Task<List<Person>> ReadDataAsync()
+        public static async IAsyncEnumerable<List<Person>> ReadDataInChunksAsync(int chunkSize)
         {
-            Debug.WriteLine("### Start of method ReadDataAsync ###");
+            Debug.WriteLine("### Start of method ReadDataInChunksAsync ###");
             ExportState.exportRunning = true;
-            var records = new List<Person>();
+
             string connectionString = "Server=localhost;Database=Peopl;Trusted_Connection=True;TrustServerCertificate=True;";
             string query = "SELECT Id, Date, FirstName, LastName, SurName, City, Country FROM Table_People_Data";
-            try
-            {
-                records = await ListPersonAsync(connectionString, query);
-                ExportState.exportRunning = false;
-            }
-            catch (Exception ex)
+
+            if (!await TestConnectionAsync(connectionString))
             {
                 try
                 {
@@ -50,87 +46,106 @@ namespace WPFStarter.ImportAndExport
                     string server = elements[0];
                     string database = elements[1];
                     connectionString = $"Server={server};Database={database};Trusted_Connection=True;TrustServerCertificate=True;";
-                    records = await ListPersonAsync(connectionString, query);
-                    ExportState.exportRunning = false;
+
+                    if (!await TestConnectionAsync(connectionString))
+                    {
+                        ExportState.statusExport = false;
+                        ExportState.exportRunning = false;
+                        ExportState.windowDB = true;
+                        yield break;
+                    }
                 }
-                catch
+                catch (Exception ex)
                 {
                     ExportState.statusExport = false;
                     ExportState.exportRunning = false;
                     ExportState.windowDB = true;
-                    Debug.WriteLine($"Ошибка подключения: {ex.Message}");
-                    MessageBox.Show($"Ошибка подключения: {ex.Message}");
+                    Debug.WriteLine($"Ошибка при чтении файла db.txt: {ex.Message}");
+                    MessageBox.Show($"Ошибка при чтении файла db.txt: {ex.Message}");
+                    yield break;
                 }
             }
-            Debug.WriteLine("### End of method ReadDataAsync ###");
-            return records;
+
+            await foreach (var chunk in StreamPersonChunksAsync(connectionString, query, chunkSize))
+            {
+                yield return chunk;
+            }
+
+            ExportState.exportRunning = false;
+            Debug.WriteLine("### End of method ReadDataInChunksAsync ###");
         }
+
         ///<summary>
         /// E.A.T. 18-April-2025
         /// Recording data about people in "records" of type "List<Person>".
         ///</summary>
-        public static async Task<List<Person>> ListPersonAsync(string connectionString, string query)
+        public static async IAsyncEnumerable<List<Person>> StreamPersonChunksAsync(string connectionString, string query, int chunkSize = 3000)
         {
-            Debug.WriteLine("### Start of method ListPersonAsync ###");
-            var records = new List<Person>();
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            Debug.WriteLine("### Start of method StreamPersonChunksAsync ###");
+
+            await using var connection = new SqlConnection(connectionString);
+            await connection.OpenAsync();
+
+            using var command = new SqlCommand(query, connection);
+            using var reader = await command.ExecuteReaderAsync();
+
+            var chunk = new List<Person>(chunkSize);
+
+            while (await reader.ReadAsync())
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                await connection.OpenAsync();
-                SqlDataReader reader = await command.ExecuteReaderAsync();
-                while (await reader.ReadAsync())
+                var person = new Person
                 {
-                    Person person = new Person
-                    {
-                        Id = (int)reader["Id"],
-                        Date = (DateTime)reader["Date"],
-                        FirstName = reader["FirstName"].ToString(),
-                        LastName = reader["LastName"].ToString(),
-                        SurName = reader["SurName"].ToString(),
-                        City = reader["City"].ToString(),
-                        Country = reader["Country"].ToString()
+                    Id = (int)reader["Id"],
+                    Date = (DateTime)reader["Date"],
+                    FirstName = reader["FirstName"].ToString(),
+                    LastName = reader["LastName"].ToString(),
+                    SurName = reader["SurName"].ToString(),
+                    City = reader["City"].ToString(),
+                    Country = reader["Country"].ToString()
+                };
 
-                    };
-                    records.Add(person);
+                chunk.Add(person);
 
+                if (chunk.Count >= chunkSize)
+                {
+                    yield return chunk;
+                    chunk = new List<Person>(chunkSize);
                 }
-                reader.Close();
             }
-            Debug.WriteLine("### End of method ListPersonAsync ###");
-            return records;
+
+            if (chunk.Count > 0)
+            {
+                yield return chunk; 
+            }
+
+            Debug.WriteLine("### End of method StreamPersonChunksAsync ###");
         }
-    }
-    class SortingData
-    {
         ///<summary>
-        /// E.A.T. 11-February-2025
-        /// Data export.
+        /// E.A.T. 9-June-2025
+        /// Checking connection to the database.
         ///</summary>
-        public static async void ExportDataAsync(string? fileName, string? typeFile, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
+        public static async Task<bool> TestConnectionAsync(string connectionString)
         {
-            Debug.WriteLine("### Start of method ExportDataAsync ###");
-            ExportState.windowDB = false;
-            List<Person> records = await Program.SortingDataForRecordingAsync(
-                                    date,
-                                    fromDate,
-                                    toDate,
-                                    firstName,
-                                    lastName,
-                                    surName,
-                                    city,
-                                    country,
-                                    outDate,
-                                    outFromDate,
-                                    outToDate,
-                                    outFirstName,
-                                    outLastName,
-                                    outSurName,
-                                    outCity,
-                                    outCountry);
-            if (records.Count != 0)
-                FileExporter.CreateFile(fileName, typeFile, out string? fullFileName, records);
-            Debug.WriteLine("### End of method ExportDataAsync ###");
+            try
+            {
+                await using var connection = new SqlConnection(connectionString);
+                await connection.OpenAsync();
+                return true;
+            }
+            catch (SqlException ex)
+            {
+                //Debug.WriteLine($"Ошибка подключения к SQL Server: {ex.Message}");
+                //MessageBox.Show($"Ошибка подключения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                //Debug.WriteLine($"Неизвестная ошибка: {ex.Message}");
+                //MessageBox.Show($"Неизвестная ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
         }
+
     }
     class FileExporter
     {
@@ -138,14 +153,14 @@ namespace WPFStarter.ImportAndExport
         /// E.A.T. 10-February-2025
         /// Checking the entered word.
         ///</summary>
-        public static void CreateFile(string? fileName, string? typeFile, out string? fullFileName, List<Person> records)
+        public static async Task CreateFile(string? fileName, string? typeFile, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
             Debug.WriteLine("### Start of method CreateFile ###");
-            fullFileName = null;
+            string? fullFileName = null;
             if (!string.IsNullOrEmpty(fileName) || !string.IsNullOrEmpty(typeFile))
             {
                 fullFileName = $"{fileName}{typeFile}";
-                FileAvailability(fullFileName, typeFile, records);
+                await FileAvailability(fullFileName, typeFile, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
             }
             Debug.WriteLine("### End of method CreateFile ###");
         }
@@ -153,7 +168,7 @@ namespace WPFStarter.ImportAndExport
         /// E.A.T. 10-February-2025
         /// Checking that such a file does not exist yet.
         ///</summary>
-        public static void FileAvailability(string fileName, string? typeFile, List<Person> records)
+        public static async Task FileAvailability(string fileName, string? typeFile, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
             Debug.WriteLine("### Start of method FileAvailability ###");
             if (File.Exists(fileName))
@@ -164,11 +179,15 @@ namespace WPFStarter.ImportAndExport
             {
                 if (typeFile == ".csv")
                 {
-                    SaveCSVAsync(fileName, records);
+                    await SaveCSVAsync(fileName, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
+                    MessageBox.Show("Data saved .CSV");
+                    ExportState.statusExport = false;
                 }
                 else if (typeFile == ".xml")
                 {
-                    SaveXMLAsync(fileName, records);
+                    await SaveXMLAsync(fileName, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
+                    MessageBox.Show("Data saved .XML");
+                    ExportState.statusExport = false;
                 }
             }
             Debug.WriteLine("### End of method FileAvailability ###");
@@ -178,50 +197,59 @@ namespace WPFStarter.ImportAndExport
         /// E.A.T. 11-February-2025
         /// Data export to .xml.
         ///</summary>
-        public static async void SaveXMLAsync(string fileName, List<Person> records)
+        public static async Task SaveXMLAsync(string filePath, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
             Debug.WriteLine("### Start of method SaveXMLAsync ###");
-            XElement testProgramElement = new XElement("TestProgram");
-            foreach (var person in records)
+            string rootElementName = "TestProgram";
+            XDocument xdoc;
+            if (!File.Exists(filePath))
             {
-                XElement personElement = new XElement("Record",
-                    new XAttribute("id", person.Id),
-                    new XElement("Date", person.Date.ToString("yyyy-MM-dd")),
-                    new XElement("FirstName", person.FirstName),
-                    new XElement("LastName", person.LastName),
-                    new XElement("SurName", person.SurName),
-                    new XElement("City", person.City),
-                    new XElement("Country", person.Country)
-                );
-
-                testProgramElement.Add(personElement);
+                xdoc = new XDocument(new XDeclaration("1.0", "utf-8", "yes"), new XElement(rootElementName));
             }
-            await Task.Run(() => {
-                XDocument xdoc = new XDocument(testProgramElement);
-                xdoc.Save($"{fileName}");
-            });
+            else
+            {
+                xdoc = XDocument.Load(filePath);
+            }
+            XElement root = xdoc.Element(rootElementName)!;
+            await foreach (var chunk in DatabaseReader.ReadDataInChunksAsync(3000))
+            {
+                List<Person> filtered = await Program.SortingDataForRecordingAsync(chunk, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
 
-            MessageBox.Show("Data saved .XML");
-            ExportState.statusExport = false;
+                foreach (var person in filtered)
+                {
+                    XElement personElement = new XElement("Record",
+                        new XAttribute("id", person.Id),
+                        new XElement("Date", person.Date.ToString("yyyy-MM-dd")),
+                        new XElement("FirstName", person.FirstName),
+                        new XElement("LastName", person.LastName),
+                        new XElement("SurName", person.SurName),
+                        new XElement("City", person.City),
+                        new XElement("Country", person.Country)
+                    );
+                    root.Add(personElement);
+                }
+            }
+            await Task.Run(() => xdoc.Save(filePath));
             Debug.WriteLine("### End of method SaveXMLAsync ###");
         }
         ///<summary>
         /// E.A.T. 12-February-2025
         /// Data export to .csv.
         ///</summary>
-        public static async void SaveCSVAsync(string filePath, List<Person> records)
+        public static async Task SaveCSVAsync(string filePath, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
             Debug.WriteLine("### Start of method SaveCSVAsync ###");
-            using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
+            using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
             {
-                foreach (var person in records)
+                await foreach (var chunk in DatabaseReader.ReadDataInChunksAsync(3000))
                 {
-                    await Task.Run(() => { writer.WriteLine($"{person.Id};{person.Date:yyyy-MM-dd};{person.FirstName};{person.LastName};{person.SurName};{person.City};{person.Country}"); });
+                    List<Person> filtered = await Program.SortingDataForRecordingAsync(chunk, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
+                    foreach (var person in filtered)
+                    {
+                        await writer.WriteLineAsync($"{person.Id};{person.Date:yyyy-MM-dd};{person.FirstName};{person.LastName};{person.SurName};{person.City};{person.Country}");
+                    }
                 }
             }
-
-            MessageBox.Show("Data saved .CSV");
-            ExportState.statusExport = false;
             Debug.WriteLine("### End of method SaveCSVAsync ###");
         }
     }
