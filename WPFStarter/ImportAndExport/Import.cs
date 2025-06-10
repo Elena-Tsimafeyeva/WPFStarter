@@ -27,35 +27,38 @@ namespace WPFStarter.ImportAndExport
         /// E.A.T. 03-April-2025
         /// Added asynchrony for reading from a .csv file.
         ///</summary>
-        public static async Task<List<Person>> ReadingDataAsync(string filePath)
+        public static async IAsyncEnumerable<List<Person>> ReadingDataAsync(string filePath, int batchSize)
         {
-            Debug.WriteLine("### Start of method ReadingDataAsync ###");
-            return await Task.Run(() =>
+            using TextFieldParser tfp = new(filePath)
             {
-                var records = new List<Person>();
-                using TextFieldParser tfp = new(filePath);
-                {
+                TextFieldType = FieldType.Delimited,
+            };
+            tfp.SetDelimiters(";");
 
-                    tfp.TextFieldType = FieldType.Delimited;
-                    tfp.SetDelimiters(";");
-                    while (!tfp.EndOfData)
-                    {
-                        var values = tfp.ReadFields();
-                        var record = new Person
-                        {
-                            Date = DateTime.Parse(values[0]),
-                            FirstName = values[1],
-                            LastName = values[2],
-                            SurName = values[3],
-                            City = values[4],
-                            Country = values[5]
-                        };
-                        records.Add(record);
-                    }
+            List<Person> batch = new();
+            while (!tfp.EndOfData)
+            {
+                var values = tfp.ReadFields();
+                var record = new Person
+                {
+                    Date = DateTime.Parse(values[0]),
+                    FirstName = values[1],
+                    LastName = values[2],
+                    SurName = values[3],
+                    City = values[4],
+                    Country = values[5]
+                };
+                batch.Add(record);
+
+                if (batch.Count == batchSize)
+                {
+                    yield return batch;
+                    batch = new List<Person>();
+                    await Task.Yield();
                 }
-                Debug.WriteLine("### End of method ReadingDataAsync ###");
-                return records;
-            });
+            }
+            if (batch.Count > 0)
+                yield return batch;
         }
     }
     class DBWriter
@@ -93,7 +96,6 @@ namespace WPFStarter.ImportAndExport
                                 context.SaveChanges();
                             }
                             ImportState.importRunning = false;
-                            MessageBox.Show("Успешно!");
                         }
                     }
                     catch (Exception ex)
@@ -153,9 +155,12 @@ namespace WPFStarter.ImportAndExport
             ImportState.windowDB = false;
             try
             {
-                var records = await CsvReader.ReadingDataAsync(filePath);
-                await DBWriter.RecordDBAsync(records);
-                 ImportState.statusImport = false;
+                await foreach (var batch in CsvReader.ReadingDataAsync(filePath, 1000))
+                {
+                    await DBWriter.RecordDBAsync(batch);
+                }
+                MessageBox.Show("Успешно!");
+                ImportState.statusImport = false;
             }
             catch (Exception ex)
             {
