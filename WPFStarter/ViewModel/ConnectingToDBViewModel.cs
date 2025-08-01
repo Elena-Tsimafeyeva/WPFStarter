@@ -13,7 +13,7 @@ namespace WPFStarter.ViewModel
         /// </summary>
         private string server;
         private string database;
-        private string explanation = " Таблица в БД должна называться Table_People_Data \n Данные в таблице: \n Id (int, null, Identity(Yes))\n Date (date, null)\n FirstName (nvarchar(50), null)\n LastName (nvarchar(50), null)\n SureName (nvarchar(50), null)\n City (nvarchar(50), null)\n Country (nvarchar(50), null)";
+        private string explanation = " Таблица в БД должна называться People \n Данные в таблице: \n Id (int, null, Identity(Yes))\n Date (date, null)\n FirstName (nvarchar(50), null)\n LastName (nvarchar(50), null)\n SureName (nvarchar(50), null)\n City (nvarchar(50), null)\n Country (nvarchar(50), null)";
         /// <summary>
         /// E.A.T. 14-April-2025
         /// Public property for accessing and changing the value of Server.
@@ -81,7 +81,8 @@ namespace WPFStarter.ViewModel
             {
                 server = Server.ToString();
                 database = Database.ToString();
-                await Program.SaveServerDatabase(server, database);
+                var dbConnection = new DbConnectionSettings();
+                await dbConnection.SaveServerDatabase(server, database);
                 CloseSpecificWindow();
             }
             Debug.WriteLine("### End of method ConnectingToDB ###");

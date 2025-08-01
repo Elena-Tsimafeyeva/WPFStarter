@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Windows;
 using System.IO;
 using WPFStarter.ProgramLogic;
+using System.Configuration;
 using System.Diagnostics;
 using WPFStarter.Model;
 
@@ -14,11 +15,11 @@ namespace WPFStarter.Data
     ///</summary>
     internal class ApplicationContext : DbContext
     {
-        public DbSet<Person> Table_People_Data { get; set; }
+        public DbSet<Person> People { get; set; }
         private static string GetConnectionString()
         {
             Debug.WriteLine("### Start of method GetConnectionString ###\n# Attempting to connect to the database. #");
-            string mainConnectionString = "Server=localhost;Database=People;Trusted_Connection=True;TrustServerCertificate=True;";
+            string mainConnectionString = ConfigurationManager.ConnectionStrings["MainConnection"].ConnectionString;
             try
             {
                 using (var connection = new SqlConnection(mainConnectionString))

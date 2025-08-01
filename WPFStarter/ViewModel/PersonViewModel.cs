@@ -4,7 +4,8 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using WPFStarter.ProgramLogic;
-using WPFStarter.ImportAndExport;
+using WPFStarter.ImportAndExport.Import;
+using WPFStarter.ImportAndExport.Export;
 
 namespace WPFStarter.ViewModel
 {
@@ -336,6 +337,7 @@ namespace WPFStarter.ViewModel
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
                     if (saveFileDialog.ShowDialog() == true)
                     {
+                        var sortData = new SortDataService();
                         if (ImportState.importRunning == false && ExportState.exportRunning == false){
 
                             StatusWorkExport(true);
@@ -381,7 +383,7 @@ namespace WPFStarter.ViewModel
                             {
                                 country = Country.ToString();
                             }
-                            Program.SortDataAsync(date, fromDate, toDate, firstName, lastName, surName, city, country, selectedFileType, fileExport);
+                            await sortData.SortDataAsync(date, fromDate, toDate, firstName, lastName, surName, city, country, selectedFileType, fileExport);
                             }
                             else if (ImportState.importRunning)
                             {
@@ -391,7 +393,7 @@ namespace WPFStarter.ViewModel
                             {
                                 MessageBox.Show("Ожидайте.\nДанные из БД ещё экспортируются.");
                             }
-                            while (ExportState.statusExport&&Program.statusExport)
+                            while (ExportState.statusExport&& sortData.StatusExport)
                             {
                                 await Task.Delay(100);
                             }
