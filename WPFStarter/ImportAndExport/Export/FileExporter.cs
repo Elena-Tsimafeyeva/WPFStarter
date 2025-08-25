@@ -72,10 +72,10 @@ namespace WPFStarter.ImportAndExport.Export
                 xdoc = XDocument.Load(filePath);
             }
             XElement root = xdoc.Element(rootElementName)!;
-            var repository = new PersonRepository();
+            //var repository = new PersonRepository();
             await foreach (var chunk in DatabaseReader.ReadDataInChunksAsync(3000))
             {
-                var filtered = repository.FilterPeople(chunk, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry );
+                var filtered = PersonRepository.FilterPeople(chunk, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry );
                 foreach (var person in filtered)
                 {
                     XElement personElement = new XElement("Record",
@@ -100,12 +100,12 @@ namespace WPFStarter.ImportAndExport.Export
         public static async Task SaveCSVAsync(string filePath, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
             Debug.WriteLine("### Start of method SaveCSVAsync ###");
-            var repository = new PersonRepository();
+            //var repository = new PersonRepository();
             using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
             {
                 await foreach (var chunk in DatabaseReader.ReadDataInChunksAsync(3000))
                 {
-                    var filtered = repository.FilterPeople( chunk, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
+                    var filtered = PersonRepository.FilterPeople( chunk, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
 
                     foreach (var person in filtered)
                     {

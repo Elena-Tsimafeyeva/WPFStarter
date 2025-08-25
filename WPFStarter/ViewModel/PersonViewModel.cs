@@ -6,6 +6,8 @@ using System.Windows.Input;
 using WPFStarter.ProgramLogic;
 using WPFStarter.ImportAndExport.Import;
 using WPFStarter.ImportAndExport.Export;
+using WPFStarter.ProgramLogic.Services;
+
 
 namespace WPFStarter.ViewModel
 {
@@ -337,7 +339,10 @@ namespace WPFStarter.ViewModel
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
                     if (saveFileDialog.ShowDialog() == true)
                     {
-                        var sortData = new SortDataService();
+                        var messageBox = new MessageBoxService();
+                        var validator = new InputValidator();
+                        var exporter = new DataExporter();
+                        var sortData = new SortDataService(messageBox, validator, exporter);
                         if (ImportState.importRunning == false && ExportState.exportRunning == false){
 
                             StatusWorkExport(true);

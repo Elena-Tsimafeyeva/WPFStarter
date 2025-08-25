@@ -10,7 +10,7 @@ namespace WPFStarter.ProgramLogic
 {
     internal class PersonRepository
     {
-        public List<Person> FilterPeople(
+        public static List<Person> FilterPeople(
         List<Person> people,
         string? date, string? fromDate, string? toDate,
         string? firstName, string? lastName, string? surName,

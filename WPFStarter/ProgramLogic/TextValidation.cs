@@ -14,7 +14,7 @@ namespace WPFStarter.ProgramLogic
         /// E.A.T. 7-February-2025
         /// Checking the entered word.
         ///</summary>
-        public void CheckingWord(string? word, out bool outWord)
+        public static void CheckingWord(string? word, out bool outWord)
         {
             Debug.WriteLine("### Start of method CheckingWord ###");
             outWord = false;

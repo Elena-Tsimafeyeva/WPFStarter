@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+
 
 namespace WPFStarter.ProgramLogic
 {
@@ -11,30 +7,41 @@ namespace WPFStarter.ProgramLogic
     {
         public bool StatusExport { get; private set; } = true;
 
-        private readonly InputValidator validator = new();
-        private readonly DataExporter exporter = new();
-
+        private readonly Interfaces.IMessageBox _messageBox;
+        private readonly Interfaces.IInputValidator _validator;
+        private readonly Interfaces.IDataExporter _exporter;
+        public SortDataService(Interfaces.IMessageBox messageBox, Interfaces.IInputValidator validator, Interfaces.IDataExporter exporter)
+        {
+            _messageBox = messageBox;
+            _validator = validator;
+            _exporter = exporter;
+        }
         public async Task SortDataAsync(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, string? fileType, string? fileName)
         {
-            var result = validator.Validate(date, fromDate, toDate, firstName, lastName, surName, city, country);
+            var result = _validator.Validate(date, fromDate, toDate, firstName, lastName, surName, city, country);
 
-            if (!result.isValid)
+            if (!result.IsValid)
             {
                 StatusExport = false;
-                MessageBox.Show("Исправьте данные!");
+                _messageBox.Show("Исправьте данные!");
                 return;
             }
 
-            var confirm = MessageBox.Show($"Вы хотите перенести данные?\nВаши данные:\nДата за {date}\nДата с {fromDate} по {toDate}\nГород {city}\nСтрана {country}\nФамилия {lastName}\nИмя {firstName}\nОтчество {surName}\nТип файла: {fileType}","Перенос данных", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
+            
+            var confirm = _messageBox.ShowConfirmation("Вы хотите перенести данные?", "Перенос данных");
             if (confirm != MessageBoxResult.Yes)
             {
                 StatusExport = false;
-                MessageBox.Show("Операция отменена.");
+                _messageBox.Show("Операция отменена.");
                 return;
             }
 
-            await exporter.ExportAsync(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, result.outDate, result.outFromDate, result.outToDate, result.outFirstName, result.outLastName, result.outSurName, result.outCity, result.outCountry);
+            await _exporter.ExportAsync(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, result.OutDate, result.OutFromDate, result.OutToDate, result.OutFirstName, result.OutLastName, result.OutSurName, result.OutCity, result.OutCountry);
         }
+        
+
     }
+
+
 }

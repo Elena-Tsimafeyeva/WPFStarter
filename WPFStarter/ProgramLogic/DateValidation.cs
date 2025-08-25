@@ -15,7 +15,7 @@ namespace WPFStarter.ProgramLogic
         /// E.A.T. 4-February-2025
         /// Checking date format.
         ///</summary>
-        public void SortDate(string? date, out bool outDate)
+        public static void SortDate(string? date, out bool outDate)
         {
             Debug.WriteLine("### Start of method SortDate ###");
             outDate = true;
@@ -41,7 +41,7 @@ namespace WPFStarter.ProgramLogic
         /// E.A.T. 5-February-2025
         /// Checking date.
         ///</summary>
-        public void CheckingDate(string? date, string? fromDate, string? toDate, out bool outDate, out bool outFromDate, out bool outToDate)
+        public static void CheckingDate(string? date, string? fromDate, string? toDate, out bool outDate, out bool outFromDate, out bool outToDate)
         {
             Debug.WriteLine("### Start of method CheckingDate ###");
             outDate = false;
