@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace WPFStarter.ProgramLogic
 {
-    internal class DateValidation
+    public class DateValidation
     {
+        private readonly Interfaces.IMessageBox _messageBox;
+        
+        public DateValidation(Interfaces.IMessageBox messageBox)
+        {
+            _messageBox = messageBox;
+        }
         ///<summary>
         /// E.A.T. 4-February-2025
         /// Checking date format.
         ///</summary>
-        public static void SortDate(string? date, out bool outDate)
+        public void SortDate(string? date, out bool outDate)
         {
             Debug.WriteLine("### Start of method SortDate ###");
             outDate = true;
@@ -26,11 +26,11 @@ namespace WPFStarter.ProgramLogic
                     DateTime parsedDate = DateTime.ParseExact(date, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     string stringParsedDate = parsedDate.ToString("yyyy-MM-dd");
                     DateTime dateFormat = DateTime.ParseExact(stringParsedDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                    MessageBox.Show($"{dateFormat}");
+                    _messageBox.Show($"{dateFormat}");
                 }
                 catch (FormatException)
                 {
-                    MessageBox.Show($"Неправильный формат даты.\nДата должна иметь вид: Год-Месяц-День\nПример: 2024-02-01\nВы ввели: {date}");
+                    _messageBox.Show($"Неправильный формат даты.\nДата должна иметь вид: Год-Месяц-День\nПример: 2024-02-01\nВы ввели: {date}");
                     outDate = false;
                 }
             }
@@ -41,7 +41,7 @@ namespace WPFStarter.ProgramLogic
         /// E.A.T. 5-February-2025
         /// Checking date.
         ///</summary>
-        public static void CheckingDate(string? date, string? fromDate, string? toDate, out bool outDate, out bool outFromDate, out bool outToDate)
+        public void CheckingDate(string? date, string? fromDate, string? toDate, out bool outDate, out bool outFromDate, out bool outToDate)
         {
             Debug.WriteLine("### Start of method CheckingDate ###");
             outDate = false;
@@ -50,11 +50,11 @@ namespace WPFStarter.ProgramLogic
 
             if (!string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(fromDate) || !string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(toDate))
             {
-                MessageBox.Show("Вы можете использовать даты для сортировки или 'ЗА Год-Месяц-День' или 'С Год-Месяц-День ПО Год-Месяц-День'.");
+                _messageBox.Show("Вы можете использовать даты для сортировки или 'ЗА Год-Месяц-День' или 'С Год-Месяц-День ПО Год-Месяц-День'.");
             }
             else if (string.IsNullOrEmpty(date) && !string.IsNullOrEmpty(fromDate) && string.IsNullOrEmpty(toDate) || string.IsNullOrEmpty(date) && string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
             {
-                MessageBox.Show("Чтобы использовать даты для сортировки 'С Год-Месяц-День ПО Год-Месяц-День',\n Вы должны заполнить оба поля.");
+                _messageBox.Show("Чтобы использовать даты для сортировки 'С Год-Месяц-День ПО Год-Месяц-День',\n Вы должны заполнить оба поля.");
             }
             else if (!string.IsNullOrEmpty(date) && string.IsNullOrEmpty(fromDate) && string.IsNullOrEmpty(toDate))
             {
@@ -79,7 +79,7 @@ namespace WPFStarter.ProgramLogic
                     }
                     else
                     {
-                        MessageBox.Show("Дата 'С' должна быть раньше даты 'По'");
+                        _messageBox.Show("Дата 'С' должна быть раньше даты 'По'");
                         outFromDate = false;
                         outToDate = false;
                     }

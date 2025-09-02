@@ -1,4 +1,5 @@
 ﻿using WPFStarter.ProgramLogic.Interfaces;
+using WPFStarter.ProgramLogic.Services;
 
 
 namespace WPFStarter.ProgramLogic
@@ -11,9 +12,10 @@ namespace WPFStarter.ProgramLogic
     {
         public ValidationResult Validate(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country)
         {
-            var dateValidation = new DateValidation();
-            var textValidation = new TextValidation();
-            DateValidation.CheckingDate(date, fromDate, toDate, out var outDate, out var outFromDate, out var outToDate);
+            var messageBox = new MessageBoxService();
+            var dateValidation = new DateValidation(messageBox);
+            //var textValidation = new TextValidation();
+            dateValidation.CheckingDate(date, fromDate, toDate, out var outDate, out var outFromDate, out var outToDate);
             TextValidation.CheckingWord(firstName, out var outFirstName);
             TextValidation.CheckingWord(lastName, out var outLastName);
             TextValidation.CheckingWord(surName, out var outSurName);

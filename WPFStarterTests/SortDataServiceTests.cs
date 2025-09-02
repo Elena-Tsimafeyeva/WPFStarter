@@ -1,6 +1,4 @@
 using Moq;
-using Xunit;
-using System.Threading.Tasks;
 using System.Windows;
 using WPFStarter.ProgramLogic;
 using WPFStarter.ProgramLogic.Interfaces;
