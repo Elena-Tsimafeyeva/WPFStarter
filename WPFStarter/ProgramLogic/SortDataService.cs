@@ -3,7 +3,7 @@
 
 namespace WPFStarter.ProgramLogic
 {
-    internal class SortDataService
+    public class SortDataService
     {
         public bool StatusExport { get; private set; } = true;
 

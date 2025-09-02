@@ -7,7 +7,7 @@ namespace WPFStarter.ProgramLogic
     /// E.A.T. 25-August-2025
     /// Implementation of the IInputValidator interface to check the correctness of input data: dates, names and geographic parameters.
     ///</summary>
-    internal class InputValidator : IInputValidator
+    public class InputValidator : IInputValidator
     {
         public ValidationResult Validate(string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country)
         {

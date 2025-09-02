@@ -2,7 +2,7 @@
 
 namespace WPFStarter.ProgramLogic
 {
-    internal class ValidationResult
+    public class ValidationResult
     {
         public bool IsValid { get; set; }
         public bool OutDate { get; set; }
