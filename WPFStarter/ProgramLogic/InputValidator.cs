@@ -14,13 +14,13 @@ namespace WPFStarter.ProgramLogic
         {
             var messageBox = new MessageBoxService();
             var dateValidation = new DateValidation(messageBox);
-            //var textValidation = new TextValidation();
+            var textValidation = new TextValidation(messageBox);
             dateValidation.CheckingDate(date, fromDate, toDate, out var outDate, out var outFromDate, out var outToDate);
-            TextValidation.CheckingWord(firstName, out var outFirstName);
-            TextValidation.CheckingWord(lastName, out var outLastName);
-            TextValidation.CheckingWord(surName, out var outSurName);
-            TextValidation.CheckingWord(city, out var outCity);
-            TextValidation.CheckingWord(country, out var outCountry);
+            textValidation.CheckingWord(firstName, out var outFirstName);
+            textValidation.CheckingWord(lastName, out var outLastName);
+            textValidation.CheckingWord(surName, out var outSurName);
+            textValidation.CheckingWord(city, out var outCity);
+            textValidation.CheckingWord(country, out var outCountry);
 
             bool isValid = (string.IsNullOrEmpty(date) || outDate) &&
                            (string.IsNullOrEmpty(fromDate) || outFromDate) &&
