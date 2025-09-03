@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using WPFStarter.Model;
 
 namespace WPFStarter.ProgramLogic
 {
-    internal class PersonRepository
+    public class PersonRepository
     {
         public static List<Person> FilterPeople(
         List<Person> people,

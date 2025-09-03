@@ -7,7 +7,7 @@
 ///</summary>
 namespace WPFStarter.Model
 {
-    internal class Person : INotifyPropertyChanged
+    public class Person : INotifyPropertyChanged
     {
         private int id;
         private DateTime date;
