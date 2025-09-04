@@ -1,26 +1,26 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using WPFStarter.ImportAndExport.Import.Interfaces;
 using WPFStarter.Model;
 
 namespace WPFStarter.ImportAndExport.Import
 {
-    internal class CsvReader
+    public class CsvReader
     {
+        private readonly ICsvParser _parser;
+
+        public CsvReader(ICsvParser parser)
+        {
+            _parser = parser;
+        }
         ///<summary>
         /// E.A.T. 29-January-2025
         /// Reading data from a .csv file and transferring it to a list of objects.
         ///</summary>
-        public static async IAsyncEnumerable<List<Person>> ReadingDataAsync(string filePath, int batchSize)
+        public async IAsyncEnumerable<List<Person>> ReadingDataAsync(string filePath, int batchSize)
         {
-            using TextFieldParser tfp = new(filePath)
-            {
-                TextFieldType = FieldType.Delimited,
-            };
-            tfp.SetDelimiters(";");
-
             List<Person> batch = new();
-            while (!tfp.EndOfData)
+            while (!_parser.EndOfData)
             {
-                var values = tfp.ReadFields();
+                var values = _parser.ReadFields();
                 var record = new Person
                 {
                     Date = DateTime.Parse(values[0]),

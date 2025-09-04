@@ -1,11 +1,11 @@
-﻿
+﻿using WPFStarter.ImportAndExport.Import.Interfaces;
 using System.Diagnostics;
 using System.Windows;
 
 
 namespace WPFStarter.ImportAndExport.Import
 {
-    internal class ImportData
+    public class ImportData
     {
         ///<summary>
         /// E.A.T. 25-December-2024
@@ -17,9 +17,11 @@ namespace WPFStarter.ImportAndExport.Import
             Debug.WriteLine("### Start of method ImportCsvAsync ###");
             ImportState.statusImport = true;
             ImportState.windowDB = false;
+            var csvParser = new CsvParser(filePath);
+            var csvReader = new CsvReader(csvParser);
             try
             {
-                await foreach (var batch in CsvReader.ReadingDataAsync(filePath, 1000))
+                await foreach (var batch in csvReader.ReadingDataAsync(filePath, 1000))
                 {
                     await DBWriter.RecordDBAsync(batch);
                 }
