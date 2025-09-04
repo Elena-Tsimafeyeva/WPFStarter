@@ -81,8 +81,9 @@ namespace WPFStarter.ViewModel
             {
                 server = Server.ToString();
                 database = Database.ToString();
-                //var dbConnection = new DbConnectionSettings();
-                await DbConnectionSettings.SaveServerDatabase(server, database);
+                var fileWriter = new FileWriter();
+                var dbSettings = new DbConnectionSettings(fileWriter);
+                await dbSettings.SaveServerDatabase(server, database);
                 CloseSpecificWindow();
             }
             Debug.WriteLine("### End of method ConnectingToDB ###");

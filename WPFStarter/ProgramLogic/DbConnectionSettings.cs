@@ -1,19 +1,25 @@
 ﻿using System.Diagnostics;
-using System.IO;
+using WPFStarter.ProgramLogic.Interfaces;
 
 
 namespace WPFStarter.ProgramLogic
 {
-    internal class DbConnectionSettings
+    public class DbConnectionSettings
     {
+        private readonly IFileWriter _fileWriter;
+
+        public DbConnectionSettings(IFileWriter fileWriter)
+        {
+            _fileWriter = fileWriter;
+        }
         ///<summary>
         /// E.A.T. 16-April-2025
         /// Asynchronous writing of "server" and "database" data.
         ///</summary>
-        public static async Task SaveServerDatabase(string server, string database)
+        public async Task SaveServerDatabase(string server, string database)
         {
             Debug.WriteLine("### Start of method SaveServerDatabase ###");
-            await File.WriteAllTextAsync("db.txt", $"{server} {database}");
+            await _fileWriter.WriteAllTextAsync("db.txt", $"{server} {database}");
             Debug.WriteLine("### End of method SaveServerDatabase ###");
         }
     }
