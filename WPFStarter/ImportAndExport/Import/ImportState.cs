@@ -1,8 +1,10 @@
 ﻿
 
+using WPFStarter.ImportAndExport.Import.Interfaces;
+
 namespace WPFStarter.ImportAndExport.Import
 {
-    internal class ImportState
+    internal class ImportState : IImportStates
     {
         /// <summary>
         /// Added "isImportCsvRunning" to track import activity.
@@ -11,8 +13,8 @@ namespace WPFStarter.ImportAndExport.Import
         /// E.A.T. 21-April-2025
         /// Added "windowDB" to enable and disable the window for entering "server" and "database" data.
         /// </summary>
-        public static bool importRunning { get; set; } = false;
-        public static bool statusImport { get; set; } = true;
-        public static bool windowDB { get; set; } = false;
+        public bool ImportRunning { get; set; }
+        public bool StatusImport { get; set; }
+        public bool WindowDB { get; set; }
     }
 }

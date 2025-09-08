@@ -3,7 +3,6 @@ using System.IO;
 using System.Text;
 using System.Windows;
 using System.Xml.Linq;
-using WPFStarter.Model;
 using WPFStarter.ProgramLogic;
 
 namespace WPFStarter.ImportAndExport.Export

@@ -2,7 +2,7 @@
 
 namespace WPFStarter.Model
 {
-    internal class ConnectingToDB : INotifyPropertyChanged
+    public class ConnectingToDB : INotifyPropertyChanged
     {
         private string server;
         private string database;

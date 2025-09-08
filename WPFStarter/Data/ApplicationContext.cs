@@ -1,8 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Windows;
 using System.IO;
-using WPFStarter.ProgramLogic;
 using System.Configuration;
 using System.Diagnostics;
 using WPFStarter.Model;

@@ -1,58 +1,61 @@
 ﻿using System.Diagnostics;
-using System.Windows;
-using WPFStarter.Data;
+using WPFStarter.ImportAndExport.Import.Interfaces;
 using WPFStarter.Model;
-
+using WPFStarter.ProgramLogic.Interfaces;
 
 namespace WPFStarter.ImportAndExport.Import
 {
-    internal class DBWriter
+    public class DBWriter
     {
+        private readonly IMessageBox _messageBox;
+        private readonly IApplicationContext _applicationContext;
+        private readonly IImportStates _importStates;
+        public DBWriter(IMessageBox messageBox, IApplicationContext applicationContext, IImportStates importStates)
+        {
+            _messageBox = messageBox;
+            _applicationContext = applicationContext;
+            _importStates = importStates;
+        }
+
         ///<summary>
         /// E.A.T. 30-January-2025
         /// Record data to the database.
         ///</summary>
-        public static async Task RecordDBAsync(List<Person> records)
+        public async Task RecordDBAsync(List<Person> records)
         {
             Debug.WriteLine("### Start of method RecordDatabaseAsync ###");
-            await Task.Run(async () => {
-                using (var context = new ApplicationContext())
-                {
                     try
                     {
-                        if (!context.Database.CanConnect())
+                        if (!_applicationContext.CanConnect())
                         {
                             throw new Exception("Подключение к базе данных невозможно. Проверьте строку подключения.");
                         }
                         else
                         {
-                            ImportState.importRunning = true;
+                            _importStates.ImportRunning = true;
                             await foreach (var batch in GetDataAsync(records, 1000))
                             {
-                                context.People.AddRange(batch);
-                                context.SaveChanges();
+                            _applicationContext.AddPeople(batch);
+                            await _applicationContext.SaveChangesAsync();
                             }
-                            ImportState.importRunning = false;
+                            _importStates.ImportRunning = false;
                         }
                     }
                     catch (Exception ex)
                     {
-                        ImportState.statusImport = false;
-                        ImportState.importRunning = false;
-                        ImportState.windowDB = true;
-                        Debug.WriteLine($"Ошибка подключения: {ex.Message}");
-                        MessageBox.Show($"Ошибка подключения: {ex.Message}");
+                        _importStates.StatusImport = false;
+                        _importStates.ImportRunning =false;
+                        _importStates.WindowDB = true;
+                        _messageBox.Show($"Ошибка подключения: {ex.Message}");
                         return;
                     }
-                }
-            });
             Debug.WriteLine("### End of method RecordDatabaseAsync ###");
         }
         ///<summary>
         /// E.A.T. 02-May-2025
         /// Using asynchronous streams to read data in 1000-record increments..
         ///</summary>
-        public static async IAsyncEnumerable<List<Person>> GetDataAsync(List<Person> records, int packageSize)
+        public async IAsyncEnumerable<List<Person>> GetDataAsync(List<Person> records, int packageSize)
         {
             Debug.WriteLine("### Start of method GetDataAsync ###");
             int totalRecords = records.Count;
