@@ -489,9 +489,15 @@ namespace WPFStarter.ViewModel
         {
             Debug.WriteLine("### Start of method FileAvailability ###");
             var importState = new ImportState();
+            var messageBox = new MessageBoxService();
+            var appContext = new DBWriterAppContext();
+            var dbWriter = new DBWriter(messageBox, appContext, importState);
+            var csvParser = new CsvParser(filePath);
+            var csvReader = new CsvReader(csvParser);
+            var importData = new ImportData(messageBox, dbWriter, csvReader, importState);
             if (System.IO.File.Exists(filePath))
             {
-                await ImportData.ImportCsvAsync(filePath);
+                await importData.ImportCsvAsync(filePath);
                 while (importState.StatusImport)
                 {
                     await Task.Delay(100);

@@ -1,42 +1,47 @@
 ﻿using WPFStarter.ImportAndExport.Import.Interfaces;
-using WPFStarter.ProgramLogic.Services;
 using System.Diagnostics;
-using System.Windows;
+using WPFStarter.ProgramLogic.Interfaces;
 
 
 namespace WPFStarter.ImportAndExport.Import
 {
     public class ImportData
     {
+        private readonly IMessageBox _messageBox;
+        private readonly IDBWriter _dbWriter;
+        private readonly ICsvReader _csvReader;
+        private readonly IImportStates _importStates;
+        public ImportData(IMessageBox messageBox, IDBWriter dbWriter, ICsvReader csvReader, IImportStates importStates)
+        {
+            _messageBox = messageBox;
+            _dbWriter = dbWriter;
+            _csvReader = csvReader;
+            _importStates = importStates;
+        }
+
         ///<summary>
         /// E.A.T. 25-December-2024
         /// Reading data from a .csv file and transferring it to a list of objects.
         /// Writing data to the database.
         ///</summary>
-        public static async Task ImportCsvAsync(string filePath)
+        public async Task ImportCsvAsync(string filePath)
         {
             Debug.WriteLine("### Start of method ImportCsvAsync ###");
-            var importState = new ImportState();
-            importState.StatusImport = true;
-            importState.WindowDB = false;
-            var csvParser = new CsvParser(filePath);
-            var csvReader = new CsvReader(csvParser);
-            var messageBox = new MessageBoxService();
-            var appContext = new DBWriterAppContext();
-            var dbWriter = new DBWriter(messageBox, appContext, importState);
+            _importStates.StatusImport = true;
+            _importStates.WindowDB = false;
             try
             {
-                await foreach (var batch in csvReader.ReadingDataAsync(filePath, 1000))
+                await foreach (var batch in _csvReader.ReadingDataAsync(filePath, 1000))
                 {
-                    await dbWriter.RecordDBAsync(batch);
+                    await _dbWriter.RecordDBAsync(batch);
                 }
-                MessageBox.Show("Успешно!");
-                importState.StatusImport = false;
+                _messageBox.Show("Успешно!");
+                _importStates.StatusImport = false;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка импорта {ex}");
-                importState.StatusImport = false;
+                _messageBox.Show($"Ошибка импорта {ex}");
+                _importStates.StatusImport = false;
             }
             Debug.WriteLine("### End of method ImportCsvAsync ###");
         }

@@ -3,7 +3,7 @@ using WPFStarter.Model;
 
 namespace WPFStarter.ImportAndExport.Import
 {
-    public class CsvReader
+    public class CsvReader: ICsvReader
     {
         private readonly ICsvParser _parser;
 

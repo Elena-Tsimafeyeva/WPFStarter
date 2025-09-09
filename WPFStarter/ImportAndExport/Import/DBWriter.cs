@@ -5,7 +5,7 @@ using WPFStarter.ProgramLogic.Interfaces;
 
 namespace WPFStarter.ImportAndExport.Import
 {
-    public class DBWriter
+    public class DBWriter: IDBWriter
     {
         private readonly IMessageBox _messageBox;
         private readonly IApplicationContext _applicationContext;
