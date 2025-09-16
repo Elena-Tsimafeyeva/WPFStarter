@@ -1,11 +1,12 @@
 ﻿using System.Globalization;
 using WPFStarter.Model;
+using WPFStarter.ProgramLogic.Interfaces;
 
 namespace WPFStarter.ProgramLogic
 {
-    public class PersonRepository
+    public class PersonRepository: IPersonRepository
     {
-        public static List<Person> FilterPeople(
+        public List<Person> FilterPeople(
         List<Person> people,
         string? date, string? fromDate, string? toDate,
         string? firstName, string? lastName, string? surName,

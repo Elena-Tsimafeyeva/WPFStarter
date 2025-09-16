@@ -16,8 +16,8 @@ namespace WPFStarterTests
                 new Person { Id = 2, FirstName = "Пётр", LastName = "Петров", SurName = "Петрович",
                     City = "Москва", Country = "Россия", Date = new DateTime(2024, 2, 2) }};
 
-
-            var result = PersonRepository.FilterPeople(
+            var personRepository = new PersonRepository();
+            var result = personRepository.FilterPeople(
                 people,
                 date: null, fromDate: null, toDate: null,
                 firstName: "Иван", lastName: null, surName: null,
@@ -40,8 +40,8 @@ namespace WPFStarterTests
                 new Person { Id = 2, FirstName = "Пётр", LastName = "Петров", SurName = "Петрович",
                     City = "Москва", Country = "Россия", Date = new DateTime(2024, 2, 2) }};
 
-
-            var result = PersonRepository.FilterPeople(
+            var personRepository = new PersonRepository();
+            var result = personRepository.FilterPeople(
                 people,
                 date: null, fromDate: null, toDate: null,
                 firstName: null, lastName: null, surName: null,
@@ -66,8 +66,8 @@ namespace WPFStarterTests
 
             DateTime dateFormat = DateTime.ParseExact("2024-02-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
             string date = dateFormat.ToString("dd.MM.yyyy");
-
-            var result = PersonRepository.FilterPeople(
+            var personRepository = new PersonRepository();
+            var result = personRepository.FilterPeople(
                 people,
                 date: date, fromDate: null, toDate: null,
                 firstName: null, lastName: null, surName: null,

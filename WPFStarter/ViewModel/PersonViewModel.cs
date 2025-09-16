@@ -344,7 +344,8 @@ namespace WPFStarter.ViewModel
                         var exporter = new DataExporter();
                         var importState = new ImportState();
                         var sortData = new SortDataService(messageBox, validator, exporter);
-                        if (importState.ImportRunning == false && ExportState.exportRunning == false){
+                        var exportState = new ExportState();
+                        if (importState.ImportRunning == false && exportState.ExportRunning == false){
 
                             StatusWorkExport(true);
                             string fileExport = saveFileDialog.FileName;
@@ -399,12 +400,14 @@ namespace WPFStarter.ViewModel
                             {
                                 MessageBox.Show("Ожидайте.\nДанные из БД ещё экспортируются.");
                             }
-                            while (ExportState.statusExport && sortData.StatusExport)
+                            while (exportState.StatusExport && sortData.StatusExport)
                             {
                                 await Task.Delay(100);
+                                Debug.WriteLine($"exportState.StatusExport {exportState.StatusExport} sortData.StatusExport {sortData.StatusExport}");
                             }
                             StatusWorkExport(false);
-                            if (importState.WindowDB || ExportState.windowDB)
+                            Debug.WriteLine("StatusWorkExport(false); был");
+                            if (importState.WindowDB || exportState.WindowDB)
                             {
                                 OpenWindowDatabase();
                             }
@@ -459,7 +462,8 @@ namespace WPFStarter.ViewModel
         {
             Debug.WriteLine("### Start of method ImportCSV ###");
             var importState = new ImportState();
-            if (importState.ImportRunning == false && ExportState.exportRunning == false)
+            var exportState = new ExportState();
+            if (importState.ImportRunning == false && exportState.ExportRunning == false)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.Filter = "Text files (*.csv)|*.csv|All files (*.*)|*.*";
@@ -495,6 +499,7 @@ namespace WPFStarter.ViewModel
             var csvParser = new CsvParser(filePath);
             var csvReader = new CsvReader(csvParser);
             var importData = new ImportData(messageBox, dbWriter, csvReader, importState);
+            var exportState = new ExportState();
             if (System.IO.File.Exists(filePath))
             {
                 await importData.ImportCsvAsync(filePath);
@@ -503,7 +508,7 @@ namespace WPFStarter.ViewModel
                     await Task.Delay(100);
                 }
                 StatusWorkImport(false);
-                if (importState.WindowDB || ExportState.windowDB)
+                if (importState.WindowDB || exportState.WindowDB)
                 {
                     OpenWindowDatabase();
                 }

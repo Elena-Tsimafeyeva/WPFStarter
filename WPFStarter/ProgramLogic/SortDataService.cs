@@ -38,6 +38,7 @@ namespace WPFStarter.ProgramLogic
             }
 
             await _exporter.ExportAsync(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, result.OutDate, result.OutFromDate, result.OutToDate, result.OutFirstName, result.OutLastName, result.OutSurName, result.OutCity, result.OutCountry);
+            StatusExport = false;
         }
         
 

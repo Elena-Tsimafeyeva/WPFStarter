@@ -1,5 +1,6 @@
 ﻿using WPFStarter.ImportAndExport.Export;
 using WPFStarter.ProgramLogic.Interfaces;
+using WPFStarter.ProgramLogic.Services;
 
 namespace WPFStarter.ProgramLogic
 {
@@ -11,7 +12,22 @@ namespace WPFStarter.ProgramLogic
     {
         public async Task ExportAsync(string? fileName, string? fileType, string? date, string? fromDate, string? toDate, string? firstName, string? lastName, string? surName, string? city, string? country, bool outDate, bool outFromDate, bool outToDate, bool outFirstName, bool outLastName, bool outSurName, bool outCity, bool outCountry)
         {
-            await FileExporter.CreateFile(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
+            var exportStates = new ExportState();
+            var messageBox = new MessageBoxService();
+            var personRepository = new PersonRepository();
+            var connectingFactory = new SqlConnectionFactory();
+            var connecting = new TestConnection(messageBox, connectingFactory);
+            var streamPersonChunks = new StreamPersonChunks(connectingFactory);
+            var fileReader = new FileReader();
+            var connectingString = new ConnectionString();
+            var dbReader = new DatabaseReader(exportStates, messageBox, connecting, streamPersonChunks, fileReader, connectingString);
+            var fileSystem = new FileSystem();
+            var getDataCSV = new GetDataCSV(personRepository, dbReader);
+            var saveFileCSV = new SaveFileCSV(exportStates, fileSystem, getDataCSV);
+            var saveFileXML = new SaveFileXML(exportStates, personRepository, dbReader, fileSystem);
+            var fileAvailability = new FileAvailability(exportStates, messageBox, fileSystem, saveFileCSV, saveFileXML);
+            var fileExporter = new FileExporter(fileAvailability);
+            await fileExporter.CreateFile(fileName, fileType, date, fromDate, toDate, firstName, lastName, surName, city, country, outDate, outFromDate, outToDate, outFirstName, outLastName, outSurName, outCity, outCountry);
         }
     }
 }
